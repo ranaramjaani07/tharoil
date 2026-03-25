@@ -112,8 +112,8 @@ http://localhost:3000
 ---
 
 ## 📸 Screenshots
+<img width="1919" height="952" alt="image" src="https://github.com/user-attachments/assets/a606f3b1-e6be-47e0-9b45-aec8b99886a2" />
 
-(Add your website screenshots here)
 
 ---
 
@@ -125,7 +125,7 @@ http://localhost:3000
 
 ## 👨‍💻 Developer
 
-**Rana Ram Jaani**
+**Rana Ram **
 
 ---
 
