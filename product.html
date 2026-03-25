@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product - Thar Oil Products</title>
+<meta name="description" content="Premium cold-pressed oils from Thar Oil">
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(9,7,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,146,42,.1);}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-text span{display:block;font-family:'Outfit',sans-serif;font-size:.5rem;font-weight:600;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-right a{color:var(--text);text-decoration:none;font-size:.8rem;transition:color .3s;padding:.4rem .8rem;}
+.nav-right a:hover{color:var(--gold2);}
+.nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark)!important;padding:.5rem 1.2rem;border-radius:50px;font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.container{max-width:1200px;margin:0 auto;padding:6rem 2rem 3rem;}
+.breadcrumb{display:flex;align-items:center;gap:.5rem;font-size:.78rem;margin-bottom:2rem;}
+.breadcrumb a{color:var(--text);text-decoration:none;transition:color .3s;}
+.breadcrumb a:hover{color:var(--gold2);}
+.breadcrumb span{color:rgba(200,146,42,.3);}
+/* Product grid */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+/* Gallery */
+.gallery{position:sticky;top:5.5rem;}
+.main-img-box{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;overflow:hidden;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;position:relative;}
+.main-img-box img{width:85%;height:85%;object-fit:contain;transition:transform .4s;}
+.main-img-box:hover img{transform:scale(1.05);}
+.out-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(9,7,5,.65);display:flex;align-items:center;justify-content:center;}
+.out-badge{background:var(--red);color:#fff;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.6rem 1.5rem;border-radius:4px;}
+.thumbs{display:flex;gap:.5rem;flex-wrap:wrap;}
+.thumb{width:70px;height:70px;object-fit:contain;border-radius:8px;cursor:pointer;border:2px solid transparent;background:var(--dark2);padding:.2rem;transition:all .3s;}
+.thumb:hover,.thumb.active{border-color:var(--gold);}
+/* Product info */
+.prod-cat{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;}
+.prod-title{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2.4rem;font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.prod-sku{font-size:.75rem;color:rgba(200,146,42,.4);margin-bottom:1.2rem;}
+.price-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.price-current{font-size:2rem;font-weight:700;color:var(--gold2);}
+.price-original{font-size:1.1rem;text-decoration:line-through;color:rgba(200,146,42,.4);}
+.discount-pill{background:var(--green);color:#fff;font-size:.7rem;font-weight:700;padding:.25rem .6rem;border-radius:20px;}
+.stock-row{display:flex;align-items:center;gap:.5rem;font-size:.85rem;margin-bottom:1.5rem;}
+.stock-dot{width:8px;height:8px;border-radius:50%;}
+.in-stock-dot{background:var(--green);}
+.out-stock-dot{background:var(--red);}
+.in-stock-text{color:var(--green);}
+.out-stock-text{color:var(--red);}
+.short-desc{font-size:.92rem;line-height:1.8;margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(200,146,42,.08);}
+/* Qty selector */
+.qty-section{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;}
+.qty-label{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600;}
+.qty-wrap{display:flex;align-items:center;background:var(--dark2);border:1px solid rgba(200,146,42,.15);border-radius:8px;overflow:hidden;}
+.qty-btn{width:42px;height:42px;background:transparent;border:none;color:var(--gold2);font-size:1.3rem;cursor:pointer;transition:background .3s;}
+.qty-btn:hover{background:rgba(200,146,42,.12);}
+.qty-val{min-width:50px;text-align:center;font-weight:600;color:var(--cream);}
+/* Buttons */
+.btn-row{display:flex;gap:1rem;margin-bottom:1.8rem;}
+.btn-add{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1rem 1.5rem;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;}
+.btn-add:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,146,42,.4);}
+.btn-add:disabled{opacity:.5;cursor:not-allowed;}
+.btn-buy{flex:1;background:transparent;border:1px solid var(--gold);color:var(--gold2);padding:1rem 1.5rem;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;}
+.btn-buy:hover:not(:disabled){background:rgba(200,146,42,.1);}
+.btn-buy:disabled{opacity:.4;cursor:not-allowed;}
+/* Meta */
+.meta-list{border:1px solid rgba(200,146,42,.08);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;}
+.meta-row{display:flex;font-size:.82rem;border-bottom:1px solid rgba(200,146,42,.06);}
+.meta-row:last-child{border-bottom:none;}
+.meta-k{padding:.65rem 1rem;background:rgba(200,146,42,.04);color:var(--gold);min-width:130px;font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+.meta-v{padding:.65rem 1rem;color:var(--cream);}
+/* Tabs */
+.tabs-header{display:flex;border-bottom:1px solid rgba(200,146,42,.12);margin-bottom:1.5rem;}
+.tab-btn{padding:.9rem 1.5rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:inherit;margin-bottom:-1px;}
+.tab-btn.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* Reviews */
+.review-card{background:var(--dark2);border:1px solid rgba(200,146,42,.08);border-radius:10px;padding:1.2rem;margin-bottom:.8rem;}
+.rev-header{display:flex;justify-content:space-between;margin-bottom:.6rem;}
+.rev-name{color:var(--cream);font-weight:600;font-size:.88rem;}
+.rev-date{font-size:.72rem;color:rgba(200,146,42,.4);}
+.stars{color:var(--gold2);font-size:.95rem;}
+.add-review-box{background:rgba(200,146,42,.04);border:1px solid rgba(200,146,42,.1);border-radius:8px;padding:1.2rem;margin-top:1.2rem;}
+.add-review-box h4{color:var(--cream);margin-bottom:.8rem;font-size:.9rem;}
+.star-select{font-size:1.3rem;cursor:pointer;margin-bottom:.6rem;}
+.star-select span{transition:opacity .2s;}
+.star-select span:hover{opacity:.8;}
+.review-textarea{width:100%;background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.12);color:var(--cream);padding:.75rem;border-radius:6px;font-family:inherit;font-size:.85rem;resize:vertical;min-height:80px;}
+.review-textarea:focus{outline:none;border-color:var(--gold);}
+.sub-review{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:.7rem 1.5rem;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:.5rem;}
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:var(--dark);padding:.75rem 1.5rem;border-radius:8px;font-weight:700;font-size:.85rem;z-index:999;transform:translateY(100px);opacity:0;transition:all .4s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+@media(max-width:900px){.prod-grid{grid-template-columns:1fr;}.btn-row{flex-direction:column;}nav{padding:1rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🫙</div>
+    <div class="logo-text">Thar Oil<span>Products</span></div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html#products">← All Products</a>
+    <a href="cart.html" style="position:relative" id="cart-link">🛒<span id="cart-badge" style="position:absolute;top:-6px;right:-6px;background:var(--gold);color:var(--dark);font-size:.55rem;font-weight:700;min-width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center">0</span></a>
+    <a href="account.html">👤</a>
+    <a href="index.html#products" class="nav-cta">Shop Now</a>
+  </div>
+</nav>
+
+<div class="container" id="mainContainer">
+  <div style="text-align:center;padding:4rem;opacity:.5">Loading product...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var product = null;
+var qty = 1;
+var selectedRating = 5;
+
+var slug = new URLSearchParams(window.location.search).get('slug');
+var productId = new URLSearchParams(window.location.search).get('id');
+
+function toast(msg, isErr){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isErr ? 'var(--red)' : 'var(--gold)';
+  el.style.color = isErr ? '#fff' : 'var(--dark)';
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+
+function updateCartBadge(){
+  try {
+    var cart = JSON.parse(localStorage.getItem('thar_cart')||'[]');
+    var count = cart.reduce(function(s,i){ return s+(i.qty||1); },0);
+    var el = document.getElementById('cart-badge');
+    if(el){ el.textContent=count; el.style.display=count>0?'flex':'none'; }
+  } catch(e){}
+}
+
+async function loadProduct(){
+  var prod = null;
+  // Try API first
+  try {
+    if(slug){
+      var res = await fetch('/api/products/'+slug);
+      prod = await res.json();
+      if(!prod.id) prod = null;
+    }
+  } catch(e){}
+
+  // Fallback: load from localStorage (admin added products)
+  if(!prod){
+    var products = JSON.parse(localStorage.getItem('thar_products')||'[]');
+    if(slug) prod = products.find(function(p){ return p.slug===slug||p.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')===slug; });
+    if(!prod && productId) prod = products.find(function(p){ return String(p.id)===String(productId); });
+  }
+
+  if(!prod){ document.getElementById('mainContainer').innerHTML='<div style="text-align:center;padding:4rem"><h2 style="color:var(--cream);font-family:Cormorant Garamond,serif">Product not found</h2><p style="margin:1rem 0">This product may have been removed.</p><a href="index.html#products" style="color:var(--gold2)">← Browse all products</a></div>'; return; }
+  product = prod;
+  renderProduct();
+}
+
+function renderProduct(){
+  var p = product;
+  var isOut = p.inventory===0 || p.stock===0 || p.inventory==='0' || p.status==='Out of Stock';
+  var images = p.images && p.images.length ? p.images : [p.imgUrl||'img/logo.png'];
+  var discount = (p.sale_price && p.price) ? Math.round((1-p.sale_price/p.price)*100) : 0;
+  var displayPrice = p.sale_price || p.price || 0;
+
+  var thumbsHtml = images.map(function(img,i){
+    return '<img src="'+img+'" class="thumb '+(i===0?'active':'')+'" onclick="setMainImg(\''+img+'\',this)" onerror="this.src=\'img/logo.png\'">';
+  }).join('');
+
+  var reviewsHtml = '';
+  if(p.reviews && p.reviews.length){
+    reviewsHtml = p.reviews.map(function(r){
+      return '<div class="review-card"><div class="rev-header"><span class="rev-name">'+(r.user_name||'Customer')+'</span><span class="rev-date">'+new Date(r.created_at).toLocaleDateString('en-IN')+'</span></div><div class="stars">'+('★'.repeat(r.rating||5))+'☆'.repeat(5-(r.rating||5))+'</div><p style="margin-top:.5rem;font-size:.85rem;line-height:1.7">'+(r.review_text||'')+'</p></div>';
+    }).join('');
+  } else { reviewsHtml='<p style="opacity:.5;font-size:.85rem">No reviews yet. Be the first to review!</p>'; }
+
+  document.title = p.name + ' - Thar Oil Products';
+  document.getElementById('mainContainer').innerHTML =
+    '<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><a href="index.html#products">Products</a><span>/</span><span style="color:var(--cream)">'+p.name+'</span></div>'
+    +'<div class="prod-grid">'
+      +'<div class="gallery">'
+        +'<div class="main-img-box">'
+          +'<img src="'+images[0]+'" id="mainImg" alt="'+p.name+'" onerror="this.src=\'img/logo.png\'">'
+          +(isOut?'<div class="out-overlay"><div class="out-badge">Out of Stock</div></div>':'')
+        +'</div>'
+        +(images.length>1?'<div class="thumbs">'+thumbsHtml+'</div>':'')
+        +(p.video_url?'<div style="margin-top:.75rem"><video src="'+p.video_url+'" controls style="width:100%;border-radius:8px;background:var(--dark3)"></video></div>':'')
+      +'</div>'
+      +'<div class="prod-info">'
+        +(p.cat||p.category_name?'<div class="prod-cat">'+(p.cat||p.category_name)+'</div>':'')
+        +'<h1 class="prod-title">'+p.name+'</h1>'
+        +(p.sku?'<div class="prod-sku">SKU: '+p.sku+'</div>':'')
+        +'<div class="price-row">'
+          +'<span class="price-current">₹'+displayPrice+'</span>'
+          +(p.sale_price&&p.price?'<span class="price-original">₹'+p.price+'</span>':'')
+          +(discount>0?'<span class="discount-pill">'+discount+'% OFF</span>':'')
+        +'</div>'
+        +'<div class="stock-row">'
+          +'<div class="stock-dot '+(isOut?'out-stock-dot':'in-stock-dot')+'"></div>'
+          +'<span class="'+(isOut?'out-stock-text':'in-stock-text')+'">'+(isOut?'Out of Stock':'In Stock'+(p.inventory?' ('+p.inventory+' available)':''))+'</span>'
+        +'</div>'
+        +(p.short_description||p.desc?'<p class="short-desc">'+(p.short_description||p.desc)+'</p>':'')
+        +'<div class="qty-section">'
+          +'<span class="qty-label">Qty:</span>'
+          +'<div class="qty-wrap">'
+            +'<button class="qty-btn" onclick="changeQty(-1)">−</button>'
+            +'<span class="qty-val" id="qtyVal">1</span>'
+            +'<button class="qty-btn" onclick="changeQty(1)">+</button>'
+          +'</div>'
+        +'</div>'
+        +'<div class="btn-row">'
+          +'<button class="btn-add" id="btnAdd" onclick="addToCart()" '+(isOut?'disabled':'')+'>'+( isOut?'Out of Stock':'🛒 Add to Cart' )+'</button>'
+          +(!isOut?'<button class="btn-buy" onclick="buyNow()">⚡ Buy Now</button>':'')
+        +'</div>'
+        +'<div class="meta-list">'
+          +(p.sizes?'<div class="meta-row"><div class="meta-k">Sizes</div><div class="meta-v">'+p.sizes+'</div></div>':'')
+          +(p.cat||p.category_name?'<div class="meta-row"><div class="meta-k">Category</div><div class="meta-v">'+(p.cat||p.category_name)+'</div></div>':'')
+          +'<div class="meta-row"><div class="meta-k">Availability</div><div class="meta-v '+(isOut?'out-stock-text':'in-stock-text')+'">'+(isOut?'Out of Stock':'In Stock')+'</div></div>'
+          +'<div class="meta-row"><div class="meta-k">Brand</div><div class="meta-v">Thar Oil Products</div></div>'
+        +'</div>'
+        +'<div class="product-tabs">'
+          +'<div class="tabs-header">'
+            +'<button class="tab-btn active" onclick="showTab(\'desc\',this)">Description</button>'
+            +'<button class="tab-btn" onclick="showTab(\'reviews\',this)">Reviews ('+(p.reviews?p.reviews.length:0)+')</button>'
+          +'</div>'
+          +'<div class="tab-content active" id="tab-desc"><p style="line-height:1.8;font-size:.9rem">'+(p.description||p.desc||'Premium quality cold-pressed oil from Thar Oil Products.')+'</p></div>'
+          +'<div class="tab-content" id="tab-reviews">'
+            +reviewsHtml
+            +'<div class="add-review-box"><h4>Write a Review</h4>'
+              +'<div class="star-select" id="starSelect" onclick="setRating(event)"><span data-star="1">★</span><span data-star="2">★</span><span data-star="3">★</span><span data-star="4">★</span><span data-star="5">★</span></div>'
+              +'<textarea class="review-textarea" id="reviewText" placeholder="Share your experience with this product..."></textarea>'
+              +'<button class="sub-review" onclick="submitReview()">Submit Review</button>'
+            +'</div>'
+          +'</div>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+
+  setStarDisplay(5);
+  updateCartBadge();
+}
+
+function setMainImg(src,el){
+  document.getElementById('mainImg').src=src;
+  document.querySelectorAll('.thumb').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+}
+
+function changeQty(d){ qty=Math.max(1,qty+d); document.getElementById('qtyVal').textContent=qty; }
+
+function addToCart(){
+  if(!product) return;
+  var cart = JSON.parse(localStorage.getItem('thar_cart')||'[]');
+  var key = product.id||product.name;
+  var existing = cart.find(function(i){return (i.id||i.name)===key;});
+  if(existing){ existing.qty=(existing.qty||1)+qty; }
+  else { cart.push({id:product.id,name:product.name,price:product.sale_price||product.price||0,images:product.images,imgUrl:product.imgUrl,cat:product.cat||product.category_name,inventory:product.inventory,stock:product.stock,qty:qty}); }
+  localStorage.setItem('thar_cart',JSON.stringify(cart));
+  updateCartBadge();
+  toast('✅ Added to cart!');
+}
+
+function buyNow(){ addToCart(); window.location.href='checkout.html'; }
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+function setRating(e){ var star=e.target.dataset.star; if(star){ selectedRating=parseInt(star); setStarDisplay(selectedRating); } }
+function setStarDisplay(n){ var el=document.getElementById('starSelect'); if(!el) return; el.querySelectorAll('span').forEach(function(s,i){ s.style.color=i<n?'var(--gold2)':'rgba(200,146,42,.2)'; }); }
+
+async function submitReview(){
+  var text=document.getElementById('reviewText').value.trim();
+  if(!text){ toast('Please write a review first','err'); return; }
+  var user=null; try{user=JSON.parse(localStorage.getItem('thar_user')||'null');}catch(e){}
+  if(!user){ toast('Please login to submit a review','err'); return; }
+  try {
+    var token=localStorage.getItem('thar_user_token');
+    await fetch('/api/user/review',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({product_id:product.id,rating:selectedRating,review_text:text})});
+  } catch(e){}
+  toast('✅ Review submitted! Thank you.');
+  document.getElementById('reviewText').value='';
+}
+
+loadProduct();
+</script>
+</body>
+</html>

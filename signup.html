@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Thar Oil</title>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --gold: #C8921A; --gold2: #E4B84A; --gold3: #F5D98A; --dark: #090705; --dark2: #120E06; --dark3: #1A1209; --cream: #F0E4C8; --text: #B8A882; --red: #C0392B; --green: #27AE60; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Outfit', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 0; }
+.container { width: 100%; max-width: 480px; padding: 0 2rem; }
+.logo { text-align: center; margin-bottom: 1.5rem; }
+.logo-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--gold), var(--gold2)); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1rem; }
+.logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; color: var(--cream); }
+.logo-text span { display: block; font-family: 'Outfit', sans-serif; font-size: .65rem; color: var(--gold2); letter-spacing: .2em; text-transform: uppercase; }
+.auth-box { background: var(--dark2); border: 1px solid rgba(200,146,42,.15); border-radius: 12px; padding: 2rem; }
+.auth-title { font-size: 1.4rem; font-weight: 600; color: var(--cream); margin-bottom: .3rem; text-align: center; }
+.auth-sub { text-align: center; margin-bottom: 1.5rem; font-size: .85rem; }
+.error { background: rgba(192,57,43,.1); border: 1px solid rgba(192,57,43,.2); color: var(--red); padding: .8rem 1rem; border-radius: 6px; font-size: .85rem; margin-bottom: 1rem; display: none; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text); margin-bottom: .4rem; }
+.form-group input { width: 100%; background: rgba(200,146,42,.05); border: 1px solid rgba(200,146,42,.15); color: var(--cream); padding: .8rem .9rem; border-radius: 6px; font-size: .95rem; font-family: 'Outfit', sans-serif; outline: none; transition: all .3s; }
+.form-group input:focus { border-color: var(--gold); }
+.form-group input::placeholder { color: rgba(200,146,42,.3); }
+.form-group.full { grid-column: 1 / -1; }
+.btn { width: 100%; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: var(--dark); border: none; padding: 1rem; font-size: .85rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: all .3s; font-family: 'Outfit', sans-serif; margin-top: .5rem; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(200,146,42,.35); }
+.divider { display: flex; align-items: center; margin: 1.5rem 0; color: rgba(200,146,42,.4); font-size: .75rem; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(200,146,42,.15); }
+.divider span { padding: 0 1rem; }
+.back-home { text-align: center; margin-top: 1.5rem; }
+.back-home a { color: var(--text); text-decoration: none; font-size: .85rem; }
+.back-home a:hover { color: var(--gold2); }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="logo">
+<div class="logo-icon">🪔</div>
+<div class="logo-text">Thar Oil<span>Premium Cold Pressed Oils</span></div>
+</div>
+<div class="auth-box">
+<h2 class="auth-title">Create Account</h2>
+<p class="auth-sub">Join Thar Oil for premium oils</p>
+<div class="error" id="error"></div>
+<form id="signupForm">
+<div class="form-row">
+<div class="form-group">
+<label>Full Name *</label>
+<input type="text" id="name" placeholder="Your name" required>
+</div>
+<div class="form-group">
+<label>Mobile *</label>
+<input type="tel" id="mobile" placeholder="Mobile number" required>
+</div>
+</div>
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="email" placeholder="Email address (optional)">
+</div>
+<div class="form-group">
+<label>WhatsApp Number</label>
+<input type="tel" id="whatsapp" placeholder="WhatsApp number">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Password *</label>
+<input type="password" id="password" placeholder="Create password" required minlength="6">
+</div>
+<div class="form-group">
+<label>Confirm Password *</label>
+<input type="password" id="confirm_password" placeholder="Confirm password" required>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Date of Birth</label>
+<input type="date" id="dob">
+</div>
+<div class="form-group">
+<label>Gender</label>
+<select id="gender" style="width:100%;background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.8rem .9rem;border-radius:6px;font-size:.95rem;font-family:'Outfit',sans-serif;">
+<option value="">Select</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="other">Other</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label>Address</label>
+<input type="text" id="address" placeholder="Street address">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>City</label>
+<input type="text" id="city" placeholder="City">
+</div>
+<div class="form-group">
+<label>State</label>
+<input type="text" id="state" placeholder="State">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>PIN Code</label>
+<input type="text" id="pincode" placeholder="PIN code">
+</div>
+<div class="form-group">
+<label>Country</label>
+<input type="text" id="country" value="India" readonly>
+</div>
+</div>
+<button type="submit" class="btn">Create Account</button>
+</form>
+<div class="divider"><span>ALREADY HAVE ACCOUNT?</span></div>
+<p style="text-align: center; font-size: .85rem;">Sign in <a href="login.html" style="color: var(--gold2); text-decoration: none;">here</a></p>
+</div>
+<p class="back-home"><a href="index.html">← Back to Home</a></p>
+</div>
+<script>
+const form = document.getElementById('signupForm');
+const errorDiv = document.getElementById('error');
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+errorDiv.style.display = 'none';
+const password = document.getElementById('password').value;
+const confirmPassword = document.getElementById('confirm_password').value;
+if (password !== confirmPassword) {
+errorDiv.textContent = 'Passwords do not match';
+errorDiv.style.display = 'block';
+return;
+}
+const formData = {
+name: document.getElementById('name').value,
+mobile: document.getElementById('mobile').value,
+email: document.getElementById('email').value || null,
+whatsapp: document.getElementById('whatsapp').value || null,
+password: password,
+dob: document.getElementById('dob').value || null,
+gender: document.getElementById('gender').value || null,
+address: document.getElementById('address').value || null,
+city: document.getElementById('city').value || null,
+state: document.getElementById('state').value || null,
+pincode: document.getElementById('pincode').value || null
+};
+try {
+const res = await fetch('/api/auth/register', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(formData)
+});
+const data = await res.json();
+if (data.success) {
+localStorage.setItem('token', data.token);
+localStorage.setItem('user', JSON.stringify(data.user));
+window.location.href = 'account.html';
+} else {
+errorDiv.textContent = data.error;
+errorDiv.style.display = 'block';
+}
+} catch (err) {
+errorDiv.textContent = 'Registration failed. Please try again.';
+errorDiv.style.display = 'block';
+}
+});
+</script>
+</body>
+</html>

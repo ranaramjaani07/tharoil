@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Thar Oil Products</title>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(9,7,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,146,42,.1);}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-text span{display:block;font-family:'Outfit',sans-serif;font-size:.5rem;font-weight:600;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;}
+.container{max-width:1100px;margin:0 auto;padding:7rem 2rem 3rem;}
+h1{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2.2rem;margin-bottom:2rem;}
+.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start;}
+.form-box{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;padding:2rem;}
+.form-section{margin-bottom:2rem;}
+.form-section h3{color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:1px solid rgba(200,146,42,.1);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-grid.full{grid-template-columns:1fr;}
+.fg{display:flex;flex-direction:column;gap:.4rem;}
+.fg label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600;}
+.fg input,.fg select,.fg textarea{background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.75rem 1rem;border-radius:6px;font-size:.9rem;font-family:inherit;transition:border .3s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--gold);}
+.fg select option{background:var(--dark2);}
+/* Payment */
+.payment-options{display:flex;flex-direction:column;gap:.75rem;}
+.payment-opt{display:flex;align-items:center;gap:.75rem;padding:1rem 1.2rem;background:rgba(200,146,42,.04);border:1px solid rgba(200,146,42,.1);border-radius:8px;cursor:pointer;transition:all .3s;}
+.payment-opt:hover{border-color:rgba(200,146,42,.3);}
+.payment-opt input[type=radio]{accent-color:var(--gold2);width:16px;height:16px;}
+.payment-opt label{cursor:pointer;font-size:.9rem;color:var(--cream);font-weight:500;}
+.payment-opt.selected{border-color:var(--gold);background:rgba(200,146,42,.08);}
+.payment-icon{font-size:1.3rem;}
+.payment-desc{font-size:.72rem;color:var(--text);}
+/* Order summary */
+.order-summary{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;padding:1.5rem;position:sticky;top:5rem;}
+.order-summary h3{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:1.3rem;margin-bottom:1.2rem;}
+.order-items{max-height:300px;overflow-y:auto;margin-bottom:1.2rem;border-bottom:1px solid rgba(200,146,42,.08);padding-bottom:1.2rem;}
+.order-item{display:flex;gap:.8rem;margin-bottom:.8rem;align-items:center;}
+.order-item img{width:48px;height:48px;object-fit:contain;border-radius:6px;background:var(--dark3);}
+.order-item-info{flex:1;}
+.order-item-name{color:var(--cream);font-size:.82rem;font-weight:600;}
+.order-item-qty{font-size:.72rem;color:var(--text);}
+.order-item-price{color:var(--gold2);font-weight:700;font-size:.88rem;}
+.summ-row{display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.88rem;}
+.summ-row.total{border-top:1px solid rgba(200,146,42,.15);padding-top:.8rem;margin-top:.5rem;font-size:1.1rem;font-weight:700;}
+.summ-row.total span:last-child{color:var(--gold2);}
+.summ-row.discount{color:var(--green);}
+.place-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1.1rem;font-size:.9rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;margin-top:1.2rem;}
+.place-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,146,42,.4);}
+.secure{text-align:center;font-size:.7rem;margin-top:.75rem;color:rgba(200,146,42,.4);}
+/* Success */
+.success-box{text-align:center;padding:4rem 2rem;background:var(--dark2);border:1px solid rgba(200,146,42,.2);border-radius:12px;}
+.success-icon{font-size:4rem;margin-bottom:1rem;}
+.success-box h2{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2rem;margin-bottom:.75rem;}
+.success-box p{margin-bottom:1.5rem;}
+.success-btn{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);padding:.9rem 2rem;text-decoration:none;font-weight:700;border-radius:8px;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin:.3rem;}
+.success-btn.outline{background:transparent;border:1px solid var(--gold);color:var(--gold2);}
+@media(max-width:900px){.checkout-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}nav{padding:1rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🫙</div>
+    <div class="logo-text">Thar Oil<span>Products</span></div>
+  </a>
+  <span style="color:var(--gold2);font-size:.85rem">🔒 Secure Checkout</span>
+</nav>
+<div class="container">
+  <div id="mainContent">Loading...</div>
+</div>
+<script>
+var CART_KEY = 'thar_cart';
+var cart = [];
+var appliedCoupon = null;
+var selectedPayment = 'cod';
+var subtotal=0, discount=0, shipping=0, total=0;
+
+function loadCart(){
+  try{ cart = JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }catch(e){ cart=[]; }
+  try{ appliedCoupon = JSON.parse(localStorage.getItem('thar_coupon')||'null'); }catch(e){ appliedCoupon=null; }
+}
+
+function calcTotals(){
+  subtotal = cart.reduce(function(s,i){ return s+(i.price||0)*(i.qty||1); },0);
+  discount = 0;
+  if(appliedCoupon){
+    discount = appliedCoupon.type==='percentage' ? subtotal*appliedCoupon.value/100 : appliedCoupon.value;
+    discount = Math.min(discount, subtotal);
+  }
+  shipping = (subtotal-discount)>=500 ? 0 : 49;
+  total = subtotal - discount + shipping;
+}
+
+function renderPage(){
+  loadCart();
+  if(!cart.length){
+    document.getElementById('mainContent').innerHTML='<div style="text-align:center;padding:4rem"><h2 style="font-family:Cormorant Garamond,serif;color:var(--cream);font-size:2rem">Cart is Empty</h2><p style="margin:1rem 0">Add products before checkout</p><a href="index.html#products" style="color:var(--gold2)">← Browse Products</a></div>';
+    return;
+  }
+  calcTotals();
+
+  // Pre-fill from logged-in user
+  var userStr = localStorage.getItem('thar_user');
+  var user = null;
+  try{ user = JSON.parse(userStr||'null'); }catch(e){}
+
+  var orderItemsHtml = cart.map(function(item){
+    var img = (item.images&&item.images[0])||item.imgUrl||'img/logo.png';
+    return '<div class="order-item">'
+      +'<img src="'+img+'" alt="'+item.name+'" onerror="this.src=\'img/logo.png\'">'
+      +'<div class="order-item-info"><div class="order-item-name">'+item.name+'</div><div class="order-item-qty">Qty: '+(item.qty||1)+'</div></div>'
+      +'<span class="order-item-price">₹'+((item.price||0)*(item.qty||1)).toFixed(0)+'</span>'
+      // ✅ Note: item.name is set from API products only, not raw user input
+    +'</div>';
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML =
+    '<h1>Checkout</h1>'
+    +'<div class="checkout-grid">'
+      +'<div class="form-box">'
+        +'<div class="form-section">'
+          +'<h3>📦 Shipping Information</h3>'
+          +'<div class="form-grid">'
+            +'<div class="fg"><label>Full Name *</label><input id="f-name" type="text" placeholder="Your full name" value="'+(user?user.name:'')+'"></div>'
+            +'<div class="fg"><label>Mobile Number *</label><input id="f-mobile" type="tel" placeholder="10-digit mobile" value="'+(user?user.mobile||'':'')+'"></div>'
+            +'<div class="fg"><label>Email</label><input id="f-email" type="email" placeholder="Email address" value="'+(user?user.email||'':'')+'"></div>'
+            +'<div class="fg"><label>Pincode *</label><input id="f-pincode" type="text" placeholder="6-digit pincode" maxlength="6"></div>'
+          +'</div>'
+          +'<div class="form-grid full" style="margin-top:1rem">'
+            +'<div class="fg"><label>Address *</label><input id="f-address" type="text" placeholder="House/Street/Area" value="'+(user?user.address||'':'')+'"></div>'
+          +'</div>'
+          +'<div class="form-grid" style="margin-top:1rem">'
+            +'<div class="fg"><label>City *</label><input id="f-city" type="text" placeholder="City" value="'+(user?user.city||'':'')+'"></div>'
+            +'<div class="fg"><label>State *</label><input id="f-state" type="text" placeholder="State" value="'+(user?user.state||'':'')+'"></div>'
+            +'<div class="fg"><label>Country</label><input id="f-country" type="text" value="India"></div>'
+          +'</div>'
+        +'</div>'
+        +'<div class="form-section">'
+          +'<h3>💳 Payment Method</h3>'
+          +'<div class="payment-options">'
+            +'<div class="payment-opt selected" id="pay-cod" onclick="selectPayment(\'cod\')">'
+              +'<input type="radio" name="payment" value="cod" checked>'
+              +'<span class="payment-icon">💵</span>'
+              +'<div><label>Cash on Delivery</label><div class="payment-desc">Pay when you receive your order</div></div>'
+            +'</div>'
+            +'<div class="payment-opt" id="pay-razorpay" onclick="selectPayment(\'razorpay\')">'
+              +'<input type="radio" name="payment" value="razorpay">'
+              +'<span class="payment-icon">💳</span>'
+              +'<div><label>Online Payment (Razorpay)</label><div class="payment-desc">UPI, Cards, Net Banking — Fast & Secure</div></div>'
+            +'</div>'
+          +'</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="order-summary">'
+        +'<h3>Order Summary</h3>'
+        +'<div class="order-items">'+orderItemsHtml+'</div>'
+        +(appliedCoupon?'<div class="summ-row discount"><span>Coupon ('+appliedCoupon.code+')</span><span>-₹'+discount.toFixed(0)+'</span></div>':'')
+        +'<div class="summ-row"><span>Subtotal</span><span>₹'+subtotal.toFixed(0)+'</span></div>'
+        +'<div class="summ-row"><span>Shipping</span><span>'+(shipping===0?'<span style="color:var(--green)">FREE</span>':'₹'+shipping)+'</span></div>'
+        +'<div class="summ-row total"><span>Total</span><span>₹'+total.toFixed(0)+'</span></div>'
+        +'<button class="place-btn" onclick="placeOrder()">Place Order →</button>'
+        +'<p class="secure">🔒 Your information is 100% secure</p>'
+      +'</div>'
+    +'</div>';
+}
+
+function selectPayment(method){
+  selectedPayment = method;
+  document.querySelectorAll('.payment-opt').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('pay-'+method).classList.add('selected');
+  document.querySelectorAll('.payment-opt input[type=radio]').forEach(function(r){ r.checked = r.value===method; });
+}
+
+function validateForm(){
+  var name = document.getElementById('f-name').value.trim();
+  var mobile = document.getElementById('f-mobile').value.trim();
+  var address = document.getElementById('f-address').value.trim();
+  var city = document.getElementById('f-city').value.trim();
+  var state = document.getElementById('f-state').value.trim();
+  var pincode = document.getElementById('f-pincode').value.trim();
+  if(!name){ alert('Please enter your full name'); return null; }
+  if(!mobile || !/^\d{10}$/.test(mobile)){ alert('Please enter a valid 10-digit mobile number'); return null; }
+  if(!address){ alert('Please enter your address'); return null; }
+  if(!city){ alert('Please enter your city'); return null; }
+  if(!state){ alert('Please enter your state'); return null; }
+  if(!pincode || !/^\d{6}$/.test(pincode)){ alert('Please enter a valid 6-digit pincode'); return null; }
+  return {name,mobile,address,city,state,pincode,
+    email: document.getElementById('f-email').value.trim(),
+    country: document.getElementById('f-country').value.trim()||'India'};
+}
+
+async function placeOrder(){
+  var formData = validateForm();
+  if(!formData) return;
+  var btn = document.querySelector('.place-btn');
+  btn.textContent = 'Placing Order...'; btn.disabled = true;
+
+  if(selectedPayment === 'razorpay'){
+    await handleRazorpay(formData);
+    return;
+  }
+  await submitOrder(formData, 'cod', null);
+}
+
+async function submitOrder(formData, paymentMethod, paymentId){
+  var user = null;
+  try{ user = JSON.parse(localStorage.getItem('thar_user')||'null'); }catch(e){}
+  var orderData = {
+    user_id: user ? user.id : null,
+    guest_name: formData.name,
+    guest_email: formData.email,
+    guest_mobile: formData.mobile,
+    shipping_address: formData.address,
+    shipping_city: formData.city,
+    shipping_state: formData.state,
+    shipping_country: formData.country,
+    shipping_pincode: formData.pincode,
+    items: cart.map(function(i){ return {id:i.id||i.name,name:i.name,price:i.price||0,quantity:i.qty||1}; }),
+    // NOTE: Server recalculates all prices server-side for security
+    subtotal: subtotal, shipping_cost: shipping, discount: discount, total: total,
+    payment_method: paymentMethod,
+    payment_id: paymentId,
+    coupon_code: appliedCoupon ? appliedCoupon.code : null
+  };
+
+  try {
+    var res = await fetch('/api/orders', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(orderData)
+    });
+    var data = await res.json();
+    if(data.success){
+      orderSuccess(data.order_number, formData.name);
+    } else { throw new Error(data.error||'Order failed'); }
+  } catch(e){
+    // Offline fallback — save locally
+    var orderNum = 'THAR-'+Date.now();
+    var localOrders = JSON.parse(localStorage.getItem('thar_orders')||'[]');
+    localOrders.push({...orderData, order_number:orderNum, order_status:'pending', created_at:new Date().toISOString()});
+    localStorage.setItem('thar_orders', JSON.stringify(localOrders));
+    orderSuccess(orderNum, formData.name);
+  }
+}
+
+async function handleRazorpay(formData){
+  // Check if Razorpay key is configured
+  try {
+    var settings = await fetch('/api/settings').then(function(r){return r.json();});
+    var rzpKey = settings.razorpay_key_id;
+    if(!rzpKey || !window.Razorpay){
+      alert('Online payment not configured. Switching to Cash on Delivery.');
+      selectPayment('cod');
+      document.querySelector('.place-btn').textContent = 'Place Order →';
+      document.querySelector('.place-btn').disabled = false;
+      return;
+    }
+    var options = {
+      key: rzpKey, amount: Math.round(total*100), currency:'INR',
+      name:'Thar Oil Products', description:'Order Payment', image:'img/logo.png',
+      handler: async function(response){
+        await submitOrder(formData, 'razorpay', response.razorpay_payment_id);
+      },
+      prefill:{ name:formData.name, contact:formData.mobile, email:formData.email||'' },
+      theme:{ color:'#C8921A' }
+    };
+    new Razorpay(options).open();
+  } catch(e){
+    alert('Payment gateway error. Using Cash on Delivery.');
+    await submitOrder(formData, 'cod', null);
+  }
+}
+
+function orderSuccess(orderNum, name){
+  localStorage.removeItem(CART_KEY);
+  localStorage.removeItem('thar_coupon');
+  document.getElementById('mainContent').innerHTML =
+    '<div class="success-box">'
+    +'<div class="success-icon">✅</div>'
+    +'<h2>Order Placed Successfully!</h2>'
+    +'<p>Thank you, <strong style="color:var(--cream)">'+name+'</strong>! Your order has been placed.</p>'
+    +'<p style="font-size:.85rem;margin-bottom:1.5rem">Order ID: <strong style="color:var(--gold2)">'+orderNum+'</strong></p>'
+    +'<p style="margin-bottom:2rem;font-size:.88rem">Our team will contact you on WhatsApp to confirm delivery details.</p>'
+    +'<a href="index.html" class="success-btn">Continue Shopping</a>'
+    +'<a href="account.html" class="success-btn outline">View My Orders</a>'
+    +'</div>';
+}
+
+renderPage();
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+</body>
+</html>

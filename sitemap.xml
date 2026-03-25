@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://tharoil20.netlify.app/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/blogs.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/product.html</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/login.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/signup.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/cart.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/checkout.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/privacy-policy.html</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/terms.html</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://tharoil20.netlify.app/delivery-policy.html</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+</urlset>

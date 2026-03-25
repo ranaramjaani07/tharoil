@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Thar Oil Products</title>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;opacity:.1;}
+.orb1{width:400px;height:400px;background:var(--gold);top:-100px;right:-100px;}
+.orb2{width:300px;height:300px;background:#7A4A0A;bottom:10%;left:-80px;}
+.logo{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:.75rem;text-decoration:none;z-index:10;}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.box{background:var(--dark2);border:1px solid rgba(200,146,42,.18);border-radius:14px;padding:2.5rem;width:100%;max-width:420px;position:relative;z-index:1;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.box-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.2rem;box-shadow:0 6px 24px rgba(200,146,42,.3);}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cream);text-align:center;margin-bottom:.3rem;}
+.sub{text-align:center;font-size:.82rem;margin-bottom:1.8rem;}
+.tabs{display:flex;background:rgba(200,146,42,.06);border-radius:8px;padding:.3rem;margin-bottom:1.8rem;}
+.tab-btn{flex:1;padding:.6rem;background:transparent;border:none;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;border-radius:6px;transition:all .3s;font-family:inherit;letter-spacing:.05em;}
+.tab-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.fg{margin-bottom:1rem;}
+.fg label{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;font-weight:600;}
+.fg input{width:100%;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.8rem 1rem;border-radius:7px;font-size:.9rem;font-family:inherit;transition:border .3s;}
+.fg input:focus{outline:none;border-color:var(--gold);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1rem;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;font-family:inherit;margin-top:.5rem;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,146,42,.4);}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.msg{font-size:.8rem;text-align:center;margin-top:.75rem;padding:.6rem 1rem;border-radius:6px;display:none;}
+.msg.err{background:rgba(192,57,43,.12);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.msg.ok{background:rgba(39,174,96,.12);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+.links{text-align:center;margin-top:1.2rem;font-size:.78rem;}
+.links a{color:var(--gold2);text-decoration:none;}
+.links a:hover{text-decoration:underline;}
+select.fg-select{width:100%;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.8rem 1rem;border-radius:7px;font-size:.9rem;font-family:inherit;}
+select.fg-select option{background:var(--dark2);}
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<a class="logo" href="index.html">
+  <div class="logo-icon">🫙</div>
+  <div class="logo-text">Thar Oil</div>
+</a>
+<div class="box">
+  <div class="box-icon">👤</div>
+  <h2>Welcome Back</h2>
+  <p class="sub">Login to your Thar Oil account</p>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+    <button class="tab-btn" onclick="switchTab('signup')">Create Account</button>
+  </div>
+
+  <!-- LOGIN PANEL -->
+  <div class="tab-panel active" id="panel-login">
+    <div class="fg"><label>Mobile / Email</label><input id="l-id" type="text" placeholder="Enter mobile or email"></div>
+    <div class="fg"><label>Password</label><input id="l-pass" type="password" placeholder="Your password"></div>
+    <button class="submit-btn" onclick="doLogin()">Login to My Account</button>
+    <div class="msg" id="l-msg"></div>
+    <div class="links" style="margin-top:1rem"><a href="index.html">← Back to Home</a></div>
+  </div>
+
+  <!-- SIGNUP PANEL -->
+  <div class="tab-panel" id="panel-signup">
+    <div class="form-grid">
+      <div class="fg"><label>Full Name *</label><input id="s-name" type="text" placeholder="Your name"></div>
+      <div class="fg"><label>Mobile *</label><input id="s-mobile" type="tel" placeholder="10 digits"></div>
+      <div class="fg"><label>Email</label><input id="s-email" type="email" placeholder="Email address"></div>
+      <div class="fg"><label>Date of Birth</label><input id="s-dob" type="date"></div>
+    </div>
+    <div class="fg"><label>Gender</label><select id="s-gender" class="fg-select"><option value="">Select Gender</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+    <div class="fg"><label>Address</label><input id="s-address" type="text" placeholder="Your address"></div>
+    <div class="form-grid">
+      <div class="fg"><label>Password *</label><input id="s-pass" type="password" placeholder="Min 6 characters"></div>
+      <div class="fg"><label>Confirm Password *</label><input id="s-pass2" type="password" placeholder="Repeat password"></div>
+    </div>
+    <button class="submit-btn" onclick="doSignup()">Create My Account</button>
+    <div class="msg" id="s-msg"></div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){ b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup')); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+function showMsg(id, text, type){
+  var el = document.getElementById(id);
+  el.textContent = text; el.className = 'msg '+type; el.style.display='block';
+  setTimeout(function(){ el.style.display='none'; }, 4000);
+}
+
+async function doLogin(){
+  var id = document.getElementById('l-id').value.trim();
+  var pass = document.getElementById('l-pass').value.trim();
+  if(!id||!pass){ showMsg('l-msg','Please fill all fields','err'); return; }
+  var btn = document.querySelector('#panel-login .submit-btn');
+  btn.textContent='Logging in...'; btn.disabled=true;
+  try {
+    var res = await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:id,mobile:id,password:pass})});
+    var data = await res.json();
+    if(data.success){
+      localStorage.setItem('thar_user_token', data.token);
+      localStorage.setItem('thar_user', JSON.stringify(data.user));
+      showMsg('l-msg','✅ Login successful! Redirecting...','ok');
+      setTimeout(function(){ window.location.href='account.html'; },1000);
+    } else {
+      showMsg('l-msg','❌ '+(data.error||'Invalid credentials'),'err');
+    }
+  } catch(e){
+    // Offline local login
+    // ✅ FIX: Offline plain-text password check hataya gaya - sirf server se login
+    var user = null; // Offline login removed - security risk tha
+    if(user){ // ye kabhi true nahi hoga - safe fallback
+      localStorage.setItem('thar_user', JSON.stringify(user));
+      showMsg('l-msg','✅ Login successful!','ok');
+      setTimeout(function(){ window.location.href='account.html'; },1000);
+    } else { showMsg('l-msg','❌ Invalid credentials','err'); }
+  }
+  btn.textContent='Login to My Account'; btn.disabled=false;
+}
+
+async function doSignup(){
+  var name = document.getElementById('s-name').value.trim();
+  var mobile = document.getElementById('s-mobile').value.trim();
+  var email = document.getElementById('s-email').value.trim();
+  var dob = document.getElementById('s-dob').value;
+  var gender = document.getElementById('s-gender').value;
+  var address = document.getElementById('s-address').value.trim();
+  var pass = document.getElementById('s-pass').value;
+  var pass2 = document.getElementById('s-pass2').value;
+  if(!name||!mobile||!pass){ showMsg('s-msg','Name, Mobile and Password are required','err'); return; }
+  if(!/^\d{10}$/.test(mobile)){ showMsg('s-msg','Enter valid 10-digit mobile number','err'); return; }
+  if(pass.length < 6){ showMsg('s-msg','Password must be at least 6 characters','err'); return; }
+  if(pass !== pass2){ showMsg('s-msg','Passwords do not match','err'); return; }
+  var btn = document.querySelector('#panel-signup .submit-btn');
+  btn.textContent='Creating...'; btn.disabled=true;
+  try {
+    var res = await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,mobile,email,dob,gender,address,password:pass})});
+    var data = await res.json();
+    if(data.success){
+      localStorage.setItem('thar_user_token', data.token);
+      localStorage.setItem('thar_user', JSON.stringify(data.user));
+      showMsg('s-msg','✅ Account created! Redirecting...','ok');
+      setTimeout(function(){ window.location.href='account.html'; },1000);
+    } else { showMsg('s-msg','❌ '+(data.error||'Registration failed'),'err'); }
+  } catch(e){
+    // Offline local signup
+    var users = JSON.parse(localStorage.getItem('thar_users')||'[]');
+    if(users.find(function(u){ return u.mobile===mobile; })){ showMsg('s-msg','❌ Mobile already registered','err'); btn.textContent='Create My Account'; btn.disabled=false; return; }
+    var newUser = {id:'u'+Date.now(),name,mobile,email,dob,gender,address,password:pass,created_at:new Date().toISOString()};
+    users.push(newUser);
+    localStorage.setItem('thar_users', JSON.stringify(users));
+    localStorage.setItem('thar_user', JSON.stringify(newUser));
+    showMsg('s-msg','✅ Account created!','ok');
+    setTimeout(function(){ window.location.href='account.html'; },1000);
+  }
+  btn.textContent='Create My Account'; btn.disabled=false;
+}
+
+// Check if already logged in
+if(localStorage.getItem('thar_user')){ window.location.href='account.html'; }
+document.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var active = document.querySelector('.tab-panel.active'); if(active.id==='panel-login') doLogin(); else doSignup(); } });
+</script>
+</body>
+</html>

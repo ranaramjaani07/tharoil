@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thar Oil — Admin Panel</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--g:#C8921A;--g2:#E4B84A;--dk:#090705;--dk2:#120E06;--dk3:#1A1209;--cr:#F0E4C8;--tx:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--tx);min-height:100vh;}
+/* LOGIN */
+#loginPage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--dk);z-index:999;}
+.login-box{background:var(--dk2);border:1px solid rgba(200,146,42,.25);border-radius:14px;padding:2.5rem;width:360px;text-align:center;}
+.login-logo{width:60px;height:60px;background:linear-gradient(135deg,var(--g),var(--g2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1.2rem;}
+.login-title{font-size:1.5rem;font-weight:700;color:var(--cr);margin-bottom:.3rem;}
+.login-sub{font-size:.8rem;margin-bottom:1.8rem;}
+.login-input{width:100%;background:rgba(200,146,42,.07);border:1px solid rgba(200,146,42,.18);color:var(--cr);padding:.85rem 1rem;border-radius:8px;font-size:.9rem;margin-bottom:.85rem;outline:none;font-family:inherit;}
+.login-input:focus{border-color:var(--g);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:var(--dk);border:none;padding:1rem;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:8px;cursor:pointer;margin-top:.3rem;}
+.login-err{color:var(--red);font-size:.8rem;margin-top:.75rem;display:none;}
+.login-hint{font-size:.72rem;color:rgba(200,146,42,.35);margin-top:1.2rem;}
+.reset-btn{background:none;border:none;color:rgba(200,146,42,.4);font-size:.68rem;cursor:pointer;text-decoration:underline;margin-top:.4rem;font-family:inherit;}
+/* DASHBOARD */
+#dashboard{display:none;min-height:100vh;}
+.topbar{background:var(--dk2);border-bottom:1px solid rgba(200,146,42,.12);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo{display:flex;align-items:center;gap:.6rem;font-weight:700;color:var(--cr);font-size:1rem;}
+.topbar-logo span{font-size:1.2rem;}
+.topbar-right{display:flex;align-items:center;gap:1rem;}
+.topbar-admin{font-size:.82rem;color:var(--g2);}
+.logout-btn{background:rgba(200,146,42,.1);border:1px solid rgba(200,146,42,.2);color:var(--g2);padding:.4rem 1rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit;}
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 54px);}
+/* SIDEBAR */
+.sidebar{background:var(--dk2);border-right:1px solid rgba(200,146,42,.1);padding:1.2rem 0;overflow-y:auto;}
+.sb-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.85rem 1.4rem;background:transparent;border:none;color:var(--tx);font-size:.82rem;font-family:inherit;cursor:pointer;transition:all .25s;text-align:left;}
+.sb-btn:hover{background:rgba(200,146,42,.07);color:var(--cr);}
+.sb-btn.active{background:rgba(200,146,42,.12);color:var(--g2);border-left:3px solid var(--g2);}
+.sb-section{padding:.6rem 1.4rem .3rem;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,146,42,.35);margin-top:.5rem;}
+/* CONTENT */
+.content{padding:2rem;overflow-y:auto;max-height:calc(100vh - 54px);}
+.page{display:none;}
+.page.active{display:block;}
+/* CARDS */
+.card{background:var(--dk2);border:1px solid rgba(200,146,42,.12);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;}
+.card-header{padding:1rem 1.4rem;border-bottom:1px solid rgba(200,146,42,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.card-title{color:var(--cr);font-weight:600;font-size:.95rem;}
+.card-body{padding:1.4rem;}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.stats-row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+.stats-row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.stat{background:var(--dk2);border:1px solid rgba(200,146,42,.12);border-radius:10px;padding:1.2rem;text-align:center;}
+.stat-val{font-size:2rem;font-weight:700;color:var(--g2);line-height:1;}
+.stat-lbl{font-size:.72rem;color:var(--tx);margin-top:.4rem;text-transform:uppercase;letter-spacing:.1em;}
+.stat-sub{font-size:.65rem;color:rgba(200,146,42,.4);margin-top:.2rem;}
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.charts-grid-3{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.chart-box{background:var(--dk2);border:1px solid rgba(200,146,42,.12);border-radius:10px;padding:1.4rem;}
+.chart-title{color:var(--cr);font-size:.88rem;font-weight:600;margin-bottom:1rem;}
+.chart-wrap{position:relative;height:220px;}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th{text-align:left;padding:.7rem 1rem;background:rgba(200,146,42,.06);color:var(--g);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(200,146,42,.1);}
+td{padding:.75rem 1rem;border-bottom:1px solid rgba(200,146,42,.06);color:var(--cr);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(200,146,42,.03);}
+/* BUTTONS */
+.btn{padding:.5rem 1rem;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;}
+.btn-gold{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--dk);}
+.btn-red{background:rgba(192,57,43,.15);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.btn-outline{background:transparent;border:1px solid rgba(200,146,42,.25);color:var(--g2);}
+.btn-sm{padding:.35rem .7rem;font-size:.72rem;}
+.btn-xs{padding:.25rem .5rem;font-size:.68rem;}
+/* FORM */
+.fg{margin-bottom:1rem;}
+.fg label{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.4rem;font-weight:600;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.15);color:var(--cr);padding:.75rem 1rem;border-radius:7px;font-size:.88rem;font-family:inherit;outline:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--g);}
+.fg select option{background:var(--dk2);}
+.fg textarea{resize:vertical;min-height:80px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+/* BADGE */
+.badge{display:inline-block;padding:.2rem .55rem;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.badge-green{background:rgba(39,174,96,.12);color:var(--green);}
+.badge-red{background:rgba(192,57,43,.12);color:var(--red);}
+.badge-gold{background:rgba(200,146,42,.12);color:var(--g2);}
+.badge-blue{background:rgba(52,152,219,.12);color:#3498db;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:500;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dk2);border:1px solid rgba(200,146,42,.2);border-radius:12px;padding:2rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.modal-title{color:var(--cr);font-size:1.1rem;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--tx);font-size:1.2rem;cursor:pointer;}
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;padding:.75rem 1.4rem;border-radius:8px;font-weight:600;font-size:.85rem;z-index:9999;transform:translateY(100px);opacity:0;transition:all .35s;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:var(--green);color:#fff;}
+.toast.err{background:var(--red);color:#fff;}
+/* PRODUCT GRID */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+.prod-card{background:var(--dk3);border:1px solid rgba(200,146,42,.1);border-radius:8px;overflow:hidden;}
+.prod-img{height:150px;display:flex;align-items:center;justify-content:center;background:rgba(200,146,42,.04);font-size:3rem;}
+.prod-img img{width:100%;height:100%;object-fit:contain;padding:.5rem;}
+.prod-info{padding:1rem;}
+.prod-name{color:var(--cr);font-weight:600;font-size:.88rem;margin-bottom:.3rem;}
+.prod-cat{font-size:.7rem;color:var(--g);margin-bottom:.5rem;}
+.prod-actions{display:flex;gap:.4rem;margin-top:.75rem;}
+/* EMPTY */
+.empty{text-align:center;padding:3rem;opacity:.4;}
+.empty-ico{font-size:3rem;margin-bottom:.75rem;}
+/* PERMISSIONS */
+.perms-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
+.perm-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--cr);}
+.perm-item input{accent-color:var(--g2);}
+/* FILTER ROW */
+.filter-row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;}
+.filter-select{background:var(--dk3);border:1px solid rgba(200,146,42,.2);color:var(--cr);padding:.45rem .9rem;border-radius:6px;font-size:.78rem;font-family:inherit;outline:none;}
+.filter-input{background:var(--dk3);border:1px solid rgba(200,146,42,.2);color:var(--cr);padding:.45rem .9rem;border-radius:6px;font-size:.78rem;font-family:inherit;outline:none;}
+/* LOCATION MAP */
+.location-list{display:flex;flex-direction:column;gap:.5rem;}
+.location-item{display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;background:rgba(200,146,42,.04);border-radius:6px;}
+.location-bar-wrap{flex:1;height:6px;background:rgba(200,146,42,.1);border-radius:3px;}
+.location-bar{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:3px;transition:width .5s;}
+.location-label{min-width:100px;font-size:.78rem;color:var(--cr);}
+.location-count{font-size:.75rem;color:var(--g2);font-weight:700;min-width:30px;text-align:right;}
+/* ACTIVITY LOG */
+.activity-item{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(200,146,42,.06);align-items:flex-start;}
+.activity-item:last-child{border-bottom:none;}
+.activity-ico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.activity-ico.add{background:rgba(39,174,96,.12);}
+.activity-ico.edit{background:rgba(200,146,42,.12);}
+.activity-ico.del{background:rgba(192,57,43,.12);}
+.activity-ico.login{background:rgba(52,152,219,.12);}
+.activity-info{flex:1;}
+.activity-admin{font-size:.82rem;font-weight:600;color:var(--cr);}
+.activity-action{font-size:.78rem;color:var(--tx);}
+.activity-time{font-size:.7rem;color:rgba(200,146,42,.4);margin-top:.1rem;}
+/* BIRTHDAY */
+.birthday-item{display:flex;align-items:center;gap:1rem;padding:.75rem;background:rgba(200,146,42,.04);border:1px solid rgba(200,146,42,.08);border-radius:8px;margin-bottom:.5rem;}
+.birthday-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--g),var(--g2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--dk);font-weight:700;}
+.page-title{color:var(--cr);font-size:1.4rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}.stats-row,.stats-row-3,.stats-row-5{grid-template-columns:repeat(2,1fr);}.charts-grid,.charts-grid-3{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">🛡️</div>
+    <div class="login-title">Admin Login</div>
+    <div class="login-sub">Thar Oil Products — Dashboard</div>
+    <input class="login-input" type="text" id="lUser" placeholder="Username" value="admin">
+    <input class="login-input" type="password" id="lPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Login to Dashboard</button>
+    <div class="login-err" id="lErr">❌ Wrong username or password</div>
+    <div class="login-hint">Enter your admin credentials</div>
+    <button class="reset-btn" onclick="resetData()">🔄 Reset login data</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-logo"><span>🫙</span> Thar Oil Admin</div>
+    <div class="topbar-right">
+      <span class="topbar-admin" id="adminName">Admin</span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-section">Main</div>
+      <button class="sb-btn active" onclick="showPage('pg-home',this)">📊 Dashboard</button>
+      <button class="sb-btn" onclick="showPage('pg-products',this)">🫙 Products</button>
+      <button class="sb-btn" onclick="showPage('pg-orders',this)">📦 Orders</button>
+      <button class="sb-btn" onclick="showPage('pg-team',this)">👥 Team</button>
+      <div class="sb-section">Manage</div>
+      <button class="sb-btn" onclick="showPage('pg-blogs',this)">📝 Blogs</button>
+      <button class="sb-btn" onclick="showPage('pg-coupons',this)">🏷️ Coupons</button>
+      <button class="sb-btn" onclick="showPage('pg-inquiries',this)">💬 Inquiries</button>
+      <button class="sb-btn" onclick="showPage('pg-affiliates',this)">🤝 Affiliates</button>
+      <div class="sb-section sb-super" id="superSection">⭐ Super Admin</div>
+      <button class="sb-btn sb-super" id="btnOrdersDash" onclick="showPage('pg-orders-dash',this)">📈 Orders Dashboard</button>
+      <button class="sb-btn sb-super" id="btnCustDash" onclick="showPage('pg-customers-dash',this)">👥 Customers Dashboard</button>
+      <button class="sb-btn sb-super" id="btnActivityDash" onclick="showPage('pg-activity-dash',this)">🔍 Activity Dashboard</button>
+      <button class="sb-btn sb-super" id="btnAdmins" onclick="showPage('pg-admins',this)">🔐 Admins</button>
+      <button class="sb-btn" onclick="showPage('pg-settings',this)">⚙️ Settings</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="page active" id="pg-home">
+        <div class="page-title">📊 Dashboard Overview</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-val" id="s-products">0</div><div class="stat-lbl">Products</div></div>
+          <div class="stat"><div class="stat-val" id="s-orders">0</div><div class="stat-lbl">Orders</div></div>
+          <div class="stat"><div class="stat-val" id="s-team">0</div><div class="stat-lbl">Team</div></div>
+          <div class="stat"><div class="stat-val" id="s-admins">0</div><div class="stat-lbl">Admins</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📦 Recent Orders</span></div>
+          <div class="card-body" id="home-orders"><div class="empty"><div class="empty-ico">📦</div><p>No orders yet</p></div></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="page" id="pg-products">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🫙 Products</span>
+            <button class="btn btn-gold btn-sm" onclick="openAddProduct()">+ Add Product</button>
+          </div>
+          <div class="card-body"><div class="prod-grid" id="prodGrid"></div></div>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="page" id="pg-orders">
+        <div class="card">
+          <div class="card-header"><span class="card-title">📦 Orders</span></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Order #</th><th>Customer</th><th>Mobile</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody id="ordersBody"><tr><td colspan="7" style="text-align:center;padding:2rem;opacity:.4">No orders yet</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="page" id="pg-team">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">👥 Team Members</span>
+            <button class="btn btn-gold btn-sm" onclick="openAddTeam()">+ Add Member</button>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
+            <tbody id="teamBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOGS -->
+      <div class="page" id="pg-blogs">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📝 Blogs</span>
+            <button class="btn btn-gold btn-sm" onclick="openAddBlog()">+ New Blog</button>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Title</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="blogsBody"><tr><td colspan="4" style="text-align:center;padding:2rem;opacity:.4">No blogs yet</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- COUPONS -->
+      <div class="page" id="pg-coupons">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🏷️ Coupons</span>
+            <button class="btn btn-gold btn-sm" onclick="openAddCoupon()">+ Add Coupon</button>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="couponsBody"><tr><td colspan="6" style="text-align:center;padding:2rem;opacity:.4">No coupons yet</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- INQUIRIES -->
+      <div class="page" id="pg-inquiries">
+        <div class="card">
+          <div class="card-header"><span class="card-title">💬 Customer Inquiries</span></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Name</th><th>Mobile</th><th>Message</th><th>Date</th></tr></thead>
+            <tbody id="inqBody"><tr><td colspan="4" style="text-align:center;padding:2rem;opacity:.4">No inquiries yet</td></tr></tbody></table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">🏪 Dealer Inquiries</span></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Name</th><th>Age</th><th>Mobile</th><th>Shop Location</th><th>Date</th></tr></thead>
+            <tbody id="dealerBody"><tr><td colspan="5" style="text-align:center;padding:2rem;opacity:.4">No dealer inquiries yet</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFFILIATES -->
+      <div class="page" id="pg-affiliates">
+        <div class="card">
+          <div class="card-header"><span class="card-title">🤝 Affiliate Requests</span></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Name</th><th>Platform</th><th>Link</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="affBody"><tr><td colspan="5" style="text-align:center;padding:2rem;opacity:.4">No requests yet</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== -->
+      <!-- ORDERS DASHBOARD     -->
+      <!-- ==================== -->
+      <div class="page" id="pg-orders-dash">
+        <div class="page-title">📈 Orders Dashboard</div>
+        <!-- Filter Row -->
+        <div class="card">
+          <div class="card-body" style="padding:1rem 1.4rem">
+            <div class="filter-row">
+              <select class="filter-select" id="od-filter" onchange="renderOrdersDash()">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">Last 7 Days</option>
+                <option value="month">Last 30 Days</option>
+                <option value="custom">Custom Range</option>
+              </select>
+              <input class="filter-input" type="date" id="od-from" onchange="renderOrdersDash()" style="display:none">
+              <input class="filter-input" type="date" id="od-to" onchange="renderOrdersDash()" style="display:none">
+              <button class="btn btn-outline btn-sm" onclick="renderOrdersDash()">🔄 Refresh</button>
+              <span id="od-last-update" style="font-size:.72rem;color:rgba(200,146,42,.4)"></span>
+            </div>
+          </div>
+        </div>
+        <!-- Stats -->
+        <div class="stats-row-5">
+          <div class="stat"><div class="stat-val" id="od-total">0</div><div class="stat-lbl">Total Orders</div></div>
+          <div class="stat"><div class="stat-val" id="od-today">0</div><div class="stat-lbl">Today</div></div>
+          <div class="stat"><div class="stat-val" id="od-week">0</div><div class="stat-lbl">This Week</div></div>
+          <div class="stat"><div class="stat-val" id="od-month">0</div><div class="stat-lbl">This Month</div></div>
+          <div class="stat"><div class="stat-val" id="od-revenue" style="font-size:1.4rem">₹0</div><div class="stat-lbl">Revenue</div></div>
+        </div>
+        <!-- Charts Row 1 -->
+        <div class="charts-grid">
+          <div class="chart-box">
+            <div class="chart-title">📊 Orders Growth (Last 7 Days)</div>
+            <div class="chart-wrap"><canvas id="chartOrdersGrowth"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">💰 Revenue (Last 7 Days)</div>
+            <div class="chart-wrap"><canvas id="chartRevenue"></canvas></div>
+          </div>
+        </div>
+        <!-- Charts Row 2 -->
+        <div class="charts-grid">
+          <div class="chart-box">
+            <div class="chart-title">🏆 Top Selling Products</div>
+            <div class="chart-wrap"><canvas id="chartTopProducts"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">📋 Order Status Breakdown</div>
+            <div class="chart-wrap"><canvas id="chartOrderStatus"></canvas></div>
+          </div>
+        </div>
+        <!-- Location -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📍 Orders by Location</span></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div>
+                <div style="font-size:.75rem;color:var(--g);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.1em">By State</div>
+                <div id="od-by-state" class="location-list"></div>
+              </div>
+              <div>
+                <div style="font-size:.75rem;color:var(--g);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.1em">By City</div>
+                <div id="od-by-city" class="location-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Recent Orders Table -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📦 Filtered Orders</span></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Order #</th><th>Customer</th><th>Mobile</th><th>State</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="od-orders-table"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== -->
+      <!-- CUSTOMERS DASHBOARD   -->
+      <!-- ===================== -->
+      <div class="page" id="pg-customers-dash">
+        <div class="page-title">👥 Customers Dashboard</div>
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat"><div class="stat-val" id="cd-total">0</div><div class="stat-lbl">Total Customers</div></div>
+          <div class="stat"><div class="stat-val" id="cd-active">0</div><div class="stat-lbl">Active Buyers</div></div>
+          <div class="stat"><div class="stat-val" id="cd-birthdays">0</div><div class="stat-lbl">Birthdays This Month</div></div>
+          <div class="stat"><div class="stat-val" id="cd-blocked">0</div><div class="stat-lbl">Blocked</div></div>
+        </div>
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="chart-box">
+            <div class="chart-title">📊 Customer Growth</div>
+            <div class="chart-wrap"><canvas id="chartCustGrowth"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">⚥ Gender Distribution</div>
+            <div class="chart-wrap"><canvas id="chartGender"></canvas></div>
+          </div>
+        </div>
+        <!-- Birthdays -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">🎂 Upcoming Birthdays (Next 30 Days)</span></div>
+          <div class="card-body" id="cd-birthday-list"><p style="opacity:.4;font-size:.85rem">No upcoming birthdays</p></div>
+        </div>
+        <!-- Filter + Table -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">👥 All Customers</span>
+            <div class="filter-row">
+              <select class="filter-select" id="cd-filter" onchange="renderCustomersDash()">
+                <option value="all">All Customers</option>
+                <option value="top-orders">Top by Orders</option>
+                <option value="blocked">Blocked Only</option>
+                <option value="birthday">Upcoming Birthday</option>
+              </select>
+              <input class="filter-input" type="text" id="cd-search" placeholder="Search name/mobile..." oninput="renderCustomersDash()" style="width:180px">
+            </div>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Name</th><th>Mobile</th><th>DOB / Age</th><th>Gender</th><th>Location</th><th>Orders</th><th>Spent</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="cd-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== -->
+      <!-- ACTIVITY DASHBOARD    -->
+      <!-- ===================== -->
+      <div class="page" id="pg-activity-dash">
+        <div class="page-title">🔍 Admin Activity Dashboard</div>
+        <!-- Stats -->
+        <div class="stats-row-3">
+          <div class="stat"><div class="stat-val" id="ac-total-admins">0</div><div class="stat-lbl">Total Admins</div></div>
+          <div class="stat"><div class="stat-val" id="ac-today-actions">0</div><div class="stat-lbl">Actions Today</div></div>
+          <div class="stat"><div class="stat-val" id="ac-total-actions">0</div><div class="stat-lbl">Total Actions</div></div>
+        </div>
+        <!-- Chart -->
+        <div class="charts-grid">
+          <div class="chart-box">
+            <div class="chart-title">📊 Actions Per Admin</div>
+            <div class="chart-wrap"><canvas id="chartAdminActions"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">📋 Action Types</div>
+            <div class="chart-wrap"><canvas id="chartActionTypes"></canvas></div>
+          </div>
+        </div>
+        <!-- Activity Log -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📝 Activity Log</span>
+            <div class="filter-row">
+              <select class="filter-select" id="ac-filter-admin" onchange="renderActivityDash()">
+                <option value="all">All Admins</option>
+              </select>
+              <select class="filter-select" id="ac-filter-type" onchange="renderActivityDash()">
+                <option value="all">All Actions</option>
+                <option value="login">Login</option>
+                <option value="product">Product</option>
+                <option value="order">Order</option>
+                <option value="blog">Blog</option>
+                <option value="coupon">Coupon</option>
+              </select>
+              <button class="btn btn-red btn-xs" onclick="clearActivityLog()">Clear Log</button>
+            </div>
+          </div>
+          <div class="card-body" id="ac-log-list"></div>
+        </div>
+      </div>
+
+      <!-- ADMINS -->
+      <div class="page" id="pg-admins">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔐 Admin Accounts</span>
+            <button class="btn btn-gold btn-sm" id="addAdminBtn" onclick="openAddAdmin()">+ Add Admin</button>
+          </div>
+          <div class="card-body" style="overflow-x:auto">
+            <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Permissions</th><th>Action</th></tr></thead>
+            <tbody id="adminsBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="pg-settings">
+        <div class="card">
+          <div class="card-header"><span class="card-title">⚙️ Website Settings</span></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="fg"><label>Site Name</label><input id="set-name" type="text" placeholder="Thar Oil Products"></div>
+              <div class="fg"><label>Contact Mobile</label><input id="set-mobile" type="text" placeholder="+91 XXXXXXXXXX"></div>
+              <div class="fg"><label>Contact Email</label><input id="set-email" type="email" placeholder="info@tharoil.com"></div>
+              <div class="fg"><label>WhatsApp Number</label><input id="set-wa" type="text" placeholder="+91 XXXXXXXXXX"></div>
+              <div class="fg"><label>Razorpay Key ID</label><input id="set-rzp" type="text" placeholder="rzp_live_..."></div>
+              <div class="fg"><label>AI Chatbot API Key</label><input id="set-ai" type="password" placeholder="sk-ant-..."></div>
+            </div>
+            <div class="fg"><label>Address</label><input id="set-addr" type="text" placeholder="Full address"></div>
+            <button class="btn btn-gold" onclick="saveSettings()" style="margin-top:.5rem">Save Settings</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- content -->
+  </div><!-- layout -->
+</div><!-- dashboard -->
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="prodModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="prodModalTitle">Add Product</span>
+      <button class="modal-close" onclick="closeModal('prodModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Product Name *</label><input id="pm-name" type="text" placeholder="e.g. Mustard Oil"></div>
+      <div class="fg"><label>Category</label>
+        <select id="pm-cat"><option>Cold-Pressed</option><option>Refined</option><option>Organic</option><option>Other</option></select>
+      </div>
+      <div class="fg"><label>Price (₹)</label><input id="pm-price" type="number" placeholder="0"></div>
+      <div class="fg"><label>Stock / Inventory</label><input id="pm-stock" type="number" placeholder="100" value="100"></div>
+      <div class="fg"><label>Status</label>
+        <select id="pm-status"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+      </div>
+      <div class="fg"><label>Sizes Available</label><input id="pm-sizes" type="text" placeholder="500ml, 1L, 2L, 5L"></div>
+    </div>
+    <div class="fg"><label>Image URL</label><input id="pm-img" type="text" placeholder="https://... or img/1.png"></div>
+    <div class="fg"><label>Description</label><textarea id="pm-desc" placeholder="Product description..."></textarea></div>
+    <div style="display:flex;gap:.75rem;margin-top:.5rem">
+      <button class="btn btn-gold" onclick="saveProduct()" style="flex:1">Save Product</button>
+      <button class="btn btn-outline" onclick="closeModal('prodModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM MODAL -->
+<div class="modal-overlay" id="teamModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Team Member</span>
+      <button class="modal-close" onclick="closeModal('teamModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Name *</label><input id="tm-name" type="text" placeholder="Full Name"></div>
+      <div class="fg"><label>Role *</label><input id="tm-role" type="text" placeholder="e.g. CEO"></div>
+      <div class="fg"><label>Hindi Name</label><input id="tm-hindi" type="text" placeholder="हिंदी नाम"></div>
+      <div class="fg"><label>Emoji</label><input id="tm-emoji" type="text" placeholder="👑" value="👤" maxlength="2"></div>
+    </div>
+    <div class="fg"><label>Bio</label><textarea id="tm-bio" placeholder="Short biography..."></textarea></div>
+    <div style="display:flex;gap:.75rem;margin-top:.5rem">
+      <button class="btn btn-gold" onclick="saveTeam()" style="flex:1">Save Member</button>
+      <button class="btn btn-outline" onclick="closeModal('teamModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG MODAL -->
+<div class="modal-overlay" id="blogModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="blogModalTitle">New Blog</span>
+      <button class="modal-close" onclick="closeModal('blogModal')">✕</button>
+    </div>
+    <div class="fg"><label>Title *</label><input id="bl-title" type="text" placeholder="Blog title"></div>
+    <div class="fg"><label>Banner Image URL</label><input id="bl-img" type="text" placeholder="https://..."></div>
+    <div class="fg"><label>Short Description</label><input id="bl-excerpt" type="text" placeholder="Short summary"></div>
+    <div class="fg"><label>Content</label><textarea id="bl-content" style="min-height:150px" placeholder="Write blog content here..."></textarea></div>
+    <div class="fg"><label>Status</label>
+      <select id="bl-status"><option value="draft">Draft</option><option value="published">Published</option></select>
+    </div>
+    <div style="display:flex;gap:.75rem;margin-top:.5rem">
+      <button class="btn btn-gold" onclick="saveBlog()" style="flex:1">Save Blog</button>
+      <button class="btn btn-outline" onclick="closeModal('blogModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- COUPON MODAL -->
+<div class="modal-overlay" id="couponModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Coupon</span>
+      <button class="modal-close" onclick="closeModal('couponModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Coupon Code *</label><input id="cp-code" type="text" placeholder="SAVE20" style="text-transform:uppercase"></div>
+      <div class="fg"><label>Type</label>
+        <select id="cp-type"><option value="percentage">Percentage (%)</option><option value="flat">Flat (₹)</option></select>
+      </div>
+      <div class="fg"><label>Discount Value *</label><input id="cp-val" type="number" placeholder="20"></div>
+      <div class="fg"><label>Minimum Order (₹)</label><input id="cp-min" type="number" placeholder="0"></div>
+      <div class="fg"><label>Expiry Date</label><input id="cp-exp" type="date"></div>
+      <div class="fg"><label>Max Uses</label><input id="cp-max" type="number" placeholder="Unlimited"></div>
+    </div>
+    <div style="display:flex;gap:.75rem;margin-top:.5rem">
+      <button class="btn btn-gold" onclick="saveCoupon()" style="flex:1">Save Coupon</button>
+      <button class="btn btn-outline" onclick="closeModal('couponModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Admin</span>
+      <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Name *</label><input id="na-name" type="text" placeholder="Admin name"></div>
+      <div class="fg"><label>Username *</label><input id="na-user" type="text" placeholder="username"></div>
+      <div class="fg"><label>Password *</label><input id="na-pass" type="password" placeholder="Min 6 chars"></div>
+      <div class="fg"><label>Role</label>
+        <select id="na-role"><option value="Admin">Admin</option><option value="Editor">Editor</option><option value="Viewer">Viewer</option></select>
+      </div>
+    </div>
+    <div class="fg" style="margin-top:.5rem"><label>Permissions</label>
+      <div class="perms-grid">
+        <label class="perm-item"><input type="checkbox" id="p-products" checked> Products</label>
+        <label class="perm-item"><input type="checkbox" id="p-orders" checked> Orders</label>
+        <label class="perm-item"><input type="checkbox" id="p-blogs"> Blogs</label>
+        <label class="perm-item"><input type="checkbox" id="p-coupons"> Coupons</label>
+        <label class="perm-item"><input type="checkbox" id="p-inquiries"> Inquiries</label>
+        <label class="perm-item"><input type="checkbox" id="p-affiliates"> Affiliates</label>
+        <label class="perm-item"><input type="checkbox" id="p-settings"> Settings</label>
+        <label class="perm-item"><input type="checkbox" id="p-team"> Team</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:.75rem;margin-top:1rem">
+      <button class="btn btn-gold" onclick="saveAdmin()" style="flex:1">Add Admin</button>
+      <button class="btn btn-outline" onclick="closeModal('adminModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================
+// DATA LAYER
+// ============================
+var KEY = {
+  admins:'to_admins', products:'to_products', orders:'to_orders', team:'to_team',
+  blogs:'to_blogs', coupons:'to_coupons', inquiries:'to_inquiries', dealers:'to_dealers',
+  affiliates:'to_affiliates', settings:'to_settings', activity:'to_activity', customers:'to_customers'
+};
+
+function get(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+function initAll(){
+  if(!get(KEY.admins)){
+    // ✅ FIX: Password plain text nahi hona chahiye - yahan sirf username store ho
+    // Asli authentication server.js ke /api/admin/login se honi chahiye
+    set(KEY.admins,[{id:'sa1',name:'Administrator',username:'admin',password:'[USE_SERVER_AUTH]',role:'Super Admin',
+      permissions:{products:true,orders:true,blogs:true,coupons:true,inquiries:true,affiliates:true,settings:true,team:true,admins:true}}]);
+  }
+  if(!get(KEY.products)){
+    set(KEY.products,[
+      {id:1,name:'Cold-Pressed Mustard Oil',cat:'Cold-Pressed',desc:'Rich spice notes & golden warmth.',sizes:'500ml, 1L, 2L, 5L, 15L, 20L',imgUrl:'img/1.png',status:'Active',price:250,inventory:100},
+      {id:2,name:'Cold-Pressed Groundnut Oil',cat:'Cold-Pressed',desc:'Mild & nutty flavor, high smoke point.',sizes:'500ml, 1L, 2L, 5L',imgUrl:'img/2.png',status:'Active',price:280,inventory:100},
+      {id:3,name:'Cold-Pressed Sesame Oil',cat:'Cold-Pressed',desc:'Aromatic & earthy.',sizes:'500ml, 1L, 2L',imgUrl:'img/3.png',status:'Active',price:320,inventory:100},
+      {id:4,name:'Refined Oil',cat:'Refined',desc:'Premium blend, neutral flavor.',sizes:'1L, 2L, 5L, 15L, 20L',imgUrl:'img/4.png',status:'Active',price:180,inventory:100}
+    ]);
+  }
+  if(!get(KEY.team)){
+    set(KEY.team,[
+      {id:'t1',name:'Chetan Ram',role:'Founder & Owner',hindi:'चेतन राम',emoji:'👑',bio:'Visionary founder bringing pure cold-pressed oils to every Indian home.'},
+      {id:'t2',name:'Rana Ram',role:'Chief Executive Officer',hindi:'राणा राम',emoji:'⚡',bio:'Strategic leader driving Thar Oil growth across India.'},
+      {id:'t3',name:'Co-Founder',role:'Co-Founder',hindi:'सह-संस्थापक',emoji:'🌟',bio:'Ensuring quality and purity in every batch.'}
+    ]);
+  }
+  if(!get(KEY.orders)) set(KEY.orders,[]);
+  if(!get(KEY.blogs)) set(KEY.blogs,[]);
+  if(!get(KEY.coupons)) set(KEY.coupons,[]);
+  if(!get(KEY.inquiries)) set(KEY.inquiries,[]);
+  if(!get(KEY.dealers)) set(KEY.dealers,[]);
+  if(!get(KEY.affiliates)) set(KEY.affiliates,[]);
+  if(!get(KEY.settings)) set(KEY.settings,{});
+  if(!get(KEY.activity)) set(KEY.activity,[]);
+  if(!get(KEY.customers)) set(KEY.customers,[]);
+}
+initAll();
+
+// ============================
+// ACTIVITY LOGGING
+// ============================
+function logActivity(action, details, type){
+  if(!currentAdmin) return;
+  var log = get(KEY.activity) || [];
+  log.unshift({
+    id:'act'+Date.now(),
+    admin_id: currentAdmin.id,
+    admin_name: currentAdmin.name,
+    admin_role: currentAdmin.role,
+    action: action,
+    details: details||'',
+    type: type||'general',
+    timestamp: new Date().toISOString()
+  });
+  if(log.length > 200) log = log.slice(0,200);
+  set(KEY.activity, log);
+}
+
+// ============================
+// AUTH
+// ============================
+var currentAdmin = null;
+var adminToken = null; // ✅ FIX: Token memory mein rakho, localStorage mein nahi
+
+// ✅ FIX: Admin login ab server se hoga, localStorage se nahi
+// Pehle: koi bhi DevTools mein localStorage edit karke admin ban sakta tha
+// Ab: server JWT verify karega, sirf sahi password se kaam hoga
+async function doLogin(){
+  var u = document.getElementById('lUser').value.trim();
+  var p = document.getElementById('lPass').value.trim();
+  var err = document.getElementById('lErr');
+  var btn = document.querySelector('#loginPage button[onclick]');
+  if(!u||!p){ err.style.display='block'; err.textContent='Username aur password daalo'; return; }
+  err.style.display='none';
+  if(btn) btn.textContent = 'Login ho raha hai...';
+
+  try {
+    var res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    var data = await res.json();
+    if(!data.token){
+      err.style.display='block';
+      err.textContent = data.error || 'Galat username ya password';
+      if(btn) btn.textContent = 'Login';
+      return;
+    }
+    // ✅ Token sessionStorage mein (tab band hone par delete hoga) - localStorage nahi
+    adminToken = data.token;
+    sessionStorage.setItem('thar_admin_token', data.token);
+    var found = {
+      id: data.admin.id, name: data.admin.name,
+      username: data.admin.username, role: data.admin.role,
+      permissions: data.admin.permissions || {}
+    };
+    currentAdmin = found;
+    err.style.display='none';
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    document.getElementById('adminName').textContent = found.name+' ('+found.role+')';
+    applyRoleUI(found);
+    logActivity('Login', 'Server se login kiya', 'login');
+    renderAll();
+    toast('Welcome back, '+found.name+'!','ok');
+    startRealTimeRefresh();
+  } catch(e) {
+    err.style.display='block';
+    err.textContent = 'Server se connect nahi ho paya. Server chalu hai?';
+  }
+  if(btn) btn.textContent = 'Login';
+}
+
+function doLogout(){
+  logActivity('Logout','Logout kiya','login');
+  currentAdmin = null;
+  adminToken = null;
+  sessionStorage.removeItem('thar_admin_token');
+  stopRealTimeRefresh();
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('lPass').value='';
+}
+
+// ✅ FIX: Server API calls ke liye auth helper
+// Ye function admin token ke saath server API call karta hai
+async function adminAPI(method, path, body) {
+  var token = adminToken || sessionStorage.getItem('thar_admin_token');
+  if(!token) { toast('Session expire ho gayi, dobara login karein','err'); doLogout(); return null; }
+  try {
+    var opts = {
+      method: method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+    };
+    if(body) opts.body = JSON.stringify(body);
+    var res = await fetch(path, opts);
+    if(res.status === 401) { toast('Session expire, dobara login karein','err'); doLogout(); return null; }
+    return await res.json();
+  } catch(e) {
+    toast('Server se connect nahi ho paya','err');
+    return null;
+  }
+}
+
+function resetData(){
+  if(!confirm('Reset all admin data? Default credentials reset hogi.')) return;
+  Object.values(KEY).forEach(function(k){ localStorage.removeItem(k); });
+  initAll();
+  var e=document.getElementById('lErr');
+  e.style.color='#27AE60'; e.textContent='Reset done! Default credentials se login karein.'; e.style.display='block';
+  document.getElementById('lUser').value='admin';
+  document.getElementById('lPass').value='';
+  setTimeout(function(){ e.style.display='none'; e.style.color=''; },5000);
+}
+
+function applyRoleUI(admin){
+  var isSA = admin.role==='Super Admin';
+  ['superSection','btnOrdersDash','btnCustDash','btnActivityDash','btnAdmins'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display=isSA?'':'none';
+  });
+}
+
+// ============================
+// REAL-TIME REFRESH
+// ============================
+var refreshInterval = null;
+function startRealTimeRefresh(){
+  refreshInterval = setInterval(function(){
+    var activePage = document.querySelector('.page.active');
+    if(activePage && activePage.id==='pg-orders-dash') renderOrdersDash();
+    if(activePage && activePage.id==='pg-customers-dash') renderCustomersDash();
+    if(activePage && activePage.id==='pg-activity-dash') renderActivityDash();
+  }, 30000);
+}
+function stopRealTimeRefresh(){ if(refreshInterval) clearInterval(refreshInterval); }
+
+// ============================
+// CHART HELPERS
+// ============================
+var chartInstances = {};
+function destroyChart(id){ if(chartInstances[id]){ chartInstances[id].destroy(); delete chartInstances[id]; } }
+var CHART_COLORS = {
+  gold: 'rgba(200,146,42,0.8)',
+  gold2: 'rgba(228,184,74,0.8)',
+  green: 'rgba(39,174,96,0.8)',
+  red: 'rgba(192,57,43,0.8)',
+  blue: 'rgba(52,152,219,0.8)',
+  purple: 'rgba(155,89,182,0.8)',
+  orange: 'rgba(230,126,34,0.8)',
+};
+var CHART_DEFAULTS = {
+  color: '#B8A882',
+  plugins:{ legend:{ labels:{ color:'#B8A882', font:{size:11} } } },
+  scales:{ x:{ ticks:{color:'#B8A882'}, grid:{color:'rgba(200,146,42,0.06)'} }, y:{ ticks:{color:'#B8A882'}, grid:{color:'rgba(200,146,42,0.06)'} } }
+};
+
+function makeLineChart(id, labels, datasets){
+  destroyChart(id);
+  var ctx = document.getElementById(id);
+  if(!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type:'line',
+    data:{ labels:labels, datasets:datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#B8A882', font:{size:10} } } },
+      scales:{ x:{ticks:{color:'#B8A882',font:{size:10}},grid:{color:'rgba(200,146,42,0.06)'}}, y:{ticks:{color:'#B8A882',font:{size:10}},grid:{color:'rgba(200,146,42,0.06)'}} }
+    }
+  });
+}
+
+function makeBarChart(id, labels, data, label, color){
+  destroyChart(id);
+  var ctx = document.getElementById(id);
+  if(!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type:'bar',
+    data:{ labels:labels, datasets:[{ label:label||'', data:data, backgroundColor:color||CHART_COLORS.gold, borderRadius:4 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#B8A882', font:{size:10} } } },
+      scales:{ x:{ticks:{color:'#B8A882',font:{size:10}},grid:{color:'rgba(200,146,42,0.06)'}}, y:{ticks:{color:'#B8A882',font:{size:10}},grid:{color:'rgba(200,146,42,0.06)'}} }
+    }
+  });
+}
+
+function makeDoughnutChart(id, labels, data, colors){
+  destroyChart(id);
+  var ctx = document.getElementById(id);
+  if(!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type:'doughnut',
+    data:{ labels:labels, datasets:[{ data:data, backgroundColor:colors||[CHART_COLORS.gold,CHART_COLORS.green,CHART_COLORS.red,CHART_COLORS.blue,CHART_COLORS.purple], borderWidth:0 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'right', labels:{ color:'#B8A882', font:{size:10}, padding:10 } } }
+    }
+  });
+}
+
+// ============================
+// DATE HELPERS
+// ============================
+function getDateRange(filter){
+  var now = new Date();
+  var today = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(filter==='today') return { from:today, to:new Date(today.getTime()+86400000) };
+  if(filter==='week') return { from:new Date(today.getTime()-6*86400000), to:new Date(today.getTime()+86400000) };
+  if(filter==='month') return { from:new Date(today.getTime()-29*86400000), to:new Date(today.getTime()+86400000) };
+  if(filter==='custom'){
+    var f=document.getElementById('od-from').value;
+    var t=document.getElementById('od-to').value;
+    return { from:f?new Date(f):new Date(0), to:t?new Date(new Date(t).getTime()+86400000):new Date(now.getTime()+86400000) };
+  }
+  return { from:new Date(0), to:new Date(now.getTime()+86400000) };
+}
+
+function getLast7DayLabels(){
+  var labels=[];
+  for(var i=6;i>=0;i--){
+    var d=new Date(Date.now()-i*86400000);
+    labels.push(d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}));
+  }
+  return labels;
+}
+
+// ============================
+// ORDERS DASHBOARD
+// ============================
+function renderOrdersDash(){
+  var filter = document.getElementById('od-filter').value;
+  var fromEl = document.getElementById('od-from');
+  var toEl = document.getElementById('od-to');
+  fromEl.style.display = filter==='custom'?'block':'none';
+  toEl.style.display = filter==='custom'?'block':'none';
+
+  var orders = get(KEY.orders)||[];
+  var range = getDateRange(filter);
+  var filtered = orders.filter(function(o){
+    var d = new Date(o.created_at);
+    return d >= range.from && d < range.to;
+  });
+
+  var now = new Date();
+  var todayStart = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var weekStart = new Date(todayStart.getTime()-6*86400000);
+  var monthStart = new Date(todayStart.getTime()-29*86400000);
+
+  document.getElementById('od-total').textContent = filtered.length;
+  document.getElementById('od-today').textContent = orders.filter(function(o){ return new Date(o.created_at)>=todayStart; }).length;
+  document.getElementById('od-week').textContent = orders.filter(function(o){ return new Date(o.created_at)>=weekStart; }).length;
+  document.getElementById('od-month').textContent = orders.filter(function(o){ return new Date(o.created_at)>=monthStart; }).length;
+  var rev = filtered.filter(function(o){ return o.payment_status==='paid'||o.status==='delivered'; }).reduce(function(s,o){ return s+(o.total||0); },0);
+  document.getElementById('od-revenue').textContent = '₹'+rev.toLocaleString('en-IN');
+  document.getElementById('od-last-update').textContent = 'Updated: '+now.toLocaleTimeString('en-IN');
+
+  // Last 7 days data
+  var labels7 = getLast7DayLabels();
+  var ordersPerDay = labels7.map(function(_,i){
+    var dayStart = new Date(Date.now()-(6-i)*86400000); dayStart.setHours(0,0,0,0);
+    var dayEnd = new Date(dayStart.getTime()+86400000);
+    return orders.filter(function(o){ var d=new Date(o.created_at); return d>=dayStart && d<dayEnd; }).length;
+  });
+  var revenuePerDay = labels7.map(function(_,i){
+    var dayStart = new Date(Date.now()-(6-i)*86400000); dayStart.setHours(0,0,0,0);
+    var dayEnd = new Date(dayStart.getTime()+86400000);
+    return orders.filter(function(o){ var d=new Date(o.created_at); return d>=dayStart&&d<dayEnd&&(o.payment_status==='paid'||o.status==='delivered'); }).reduce(function(s,o){ return s+(o.total||0); },0);
+  });
+
+  makeLineChart('chartOrdersGrowth', labels7, [{
+    label:'Orders', data:ordersPerDay, borderColor:CHART_COLORS.gold, backgroundColor:'rgba(200,146,42,0.1)',
+    fill:true, tension:0.4, pointBackgroundColor:CHART_COLORS.gold
+  }]);
+  makeLineChart('chartRevenue', labels7, [{
+    label:'Revenue (₹)', data:revenuePerDay, borderColor:CHART_COLORS.green, backgroundColor:'rgba(39,174,96,0.1)',
+    fill:true, tension:0.4, pointBackgroundColor:CHART_COLORS.green
+  }]);
+
+  // Top products
+  var prodSales = {};
+  filtered.forEach(function(o){
+    if(o.items) o.items.forEach(function(it){ prodSales[it.name]=(prodSales[it.name]||0)+(it.quantity||1); });
+    else if(o.product_name) prodSales[o.product_name]=(prodSales[o.product_name]||0)+1;
+  });
+  var topProds = Object.entries(prodSales).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  makeBarChart('chartTopProducts', topProds.map(function(p){return p[0];}), topProds.map(function(p){return p[1];}), 'Units Sold', CHART_COLORS.gold2);
+
+  // Status breakdown
+  var statusCounts = {};
+  filtered.forEach(function(o){ statusCounts[o.status]=(statusCounts[o.status]||0)+1; });
+  var statLabels = Object.keys(statusCounts);
+  var statData = statLabels.map(function(s){ return statusCounts[s]; });
+  makeDoughnutChart('chartOrderStatus', statLabels, statData, [CHART_COLORS.gold,CHART_COLORS.green,CHART_COLORS.blue,CHART_COLORS.red,CHART_COLORS.purple]);
+
+  // Location
+  var stateCounts = {};
+  var cityCounts = {};
+  filtered.forEach(function(o){
+    var state = o.shipping_state||o.state||'Unknown';
+    var city = o.shipping_city||o.city||'Unknown';
+    stateCounts[state]=(stateCounts[state]||0)+1;
+    cityCounts[city]=(cityCounts[city]||0)+1;
+  });
+  renderLocationBars('od-by-state', stateCounts, filtered.length);
+  renderLocationBars('od-by-city', cityCounts, filtered.length);
+
+  // Orders table
+  var tb = document.getElementById('od-orders-table');
+  if(!filtered.length){ tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;opacity:.4">No orders in this period</td></tr>'; return; }
+  tb.innerHTML = filtered.slice().reverse().slice(0,20).map(function(o){
+    return '<tr><td style="color:var(--g2);font-size:.72rem">'+o.order_number+'</td><td>'+o.customer_name+'</td><td>'+o.customer_mobile+'</td><td style="font-size:.75rem">'+(o.shipping_state||'—')+'</td><td style="color:var(--g2);font-weight:700">₹'+(o.total||0)+'</td><td><span class="badge badge-gold">'+o.status+'</span></td><td style="font-size:.72rem">'+new Date(o.created_at).toLocaleDateString('en-IN')+'</td></tr>';
+  }).join('');
+}
+
+function renderLocationBars(elId, counts, total){
+  var el = document.getElementById(elId);
+  if(!el) return;
+  var sorted = Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  if(!sorted.length){ el.innerHTML='<p style="opacity:.4;font-size:.8rem">No data</p>'; return; }
+  var max = sorted[0][1];
+  el.innerHTML = sorted.map(function(item){
+    var pct = max>0?Math.round(item[1]/max*100):0;
+    return '<div class="location-item"><div class="location-label">'+item[0]+'</div><div class="location-bar-wrap"><div class="location-bar" style="width:'+pct+'%"></div></div><div class="location-count">'+item[1]+'</div></div>';
+  }).join('');
+}
+
+// ============================
+// CUSTOMERS DASHBOARD
+// ============================
+function renderCustomersDash(){
+  var customers = get(KEY.customers)||[];
+  var orders = get(KEY.orders)||[];
+
+  // Enrich customers with order data
+  var enriched = customers.map(function(c){
+    var cOrders = orders.filter(function(o){ return o.customer_mobile===c.mobile||o.user_id===c.id; });
+    var spent = cOrders.reduce(function(s,o){ return s+(o.total||0); },0);
+    return Object.assign({},c,{ order_count:cOrders.length, total_spent:spent, return_count:cOrders.filter(function(o){return o.status==='returned'||o.status==='cancelled';}).length });
+  });
+
+  // Stats
+  var now = new Date();
+  var thisMonth = now.getMonth();
+  var thisYear = now.getFullYear();
+  document.getElementById('cd-total').textContent = customers.length;
+  document.getElementById('cd-active').textContent = enriched.filter(function(c){ return c.order_count>0; }).length;
+  document.getElementById('cd-blocked').textContent = customers.filter(function(c){ return c.is_blocked; }).length;
+
+  // Birthdays this month
+  var bdThisMonth = customers.filter(function(c){
+    if(!c.dob) return false;
+    var d = new Date(c.dob);
+    return d.getMonth()===thisMonth;
+  });
+  document.getElementById('cd-birthdays').textContent = bdThisMonth.length;
+
+  // Customer growth chart (last 7 months)
+  var monthLabels = [];
+  var monthData = [];
+  for(var i=6;i>=0;i--){
+    var d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    monthLabels.push(d.toLocaleDateString('en-IN',{month:'short',year:'2-digit'}));
+    monthData.push(customers.filter(function(c){
+      var cd = new Date(c.created_at||Date.now());
+      return cd.getFullYear()===d.getFullYear()&&cd.getMonth()===d.getMonth();
+    }).length);
+  }
+  makeBarChart('chartCustGrowth', monthLabels, monthData, 'New Customers', CHART_COLORS.gold);
+
+  // Gender chart
+  var genderCounts = {Male:0,Female:0,Other:0};
+  customers.forEach(function(c){ if(c.gender==='male') genderCounts.Male++; else if(c.gender==='female') genderCounts.Female++; else genderCounts.Other++; });
+  makeDoughnutChart('chartGender',['Male','Female','Other'],[genderCounts.Male,genderCounts.Female,genderCounts.Other],[CHART_COLORS.blue,CHART_COLORS.purple,CHART_COLORS.gold]);
+
+  // Upcoming birthdays (next 30 days)
+  var next30 = [];
+  customers.forEach(function(c){
+    if(!c.dob) return;
+    var dob = new Date(c.dob);
+    var nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+    if(nextBday < now) nextBday.setFullYear(now.getFullYear()+1);
+    var diff = Math.ceil((nextBday-now)/86400000);
+    if(diff<=30) next30.push({customer:c, daysLeft:diff, nextBday:nextBday});
+  });
+  next30.sort(function(a,b){return a.daysLeft-b.daysLeft;});
+  var bdEl = document.getElementById('cd-birthday-list');
+  if(!next30.length){ bdEl.innerHTML='<p style="opacity:.4;font-size:.85rem">No upcoming birthdays in next 30 days</p>'; }
+  else {
+    bdEl.innerHTML = next30.slice(0,5).map(function(item){
+      var c=item.customer;
+      return '<div class="birthday-item"><div class="birthday-avatar">'+c.name.charAt(0).toUpperCase()+'</div><div style="flex:1"><div style="color:var(--cr);font-weight:600;font-size:.85rem">'+c.name+'</div><div style="font-size:.75rem">'+new Date(c.dob).toLocaleDateString('en-IN',{day:'numeric',month:'long'})+'</div></div><div style="text-align:right"><div style="font-size:1.2rem">🎂</div><div style="font-size:.72rem;color:var(--g2)">'+item.daysLeft+' days</div></div></div>';
+    }).join('');
+  }
+
+  // Filter + Search
+  var filterVal = document.getElementById('cd-filter').value;
+  var searchVal = document.getElementById('cd-search').value.toLowerCase();
+  var filtered = enriched.filter(function(c){
+    var matchSearch = !searchVal || c.name.toLowerCase().includes(searchVal) || (c.mobile&&c.mobile.includes(searchVal));
+    var matchFilter = true;
+    if(filterVal==='top-orders') matchFilter = c.order_count > 0;
+    if(filterVal==='blocked') matchFilter = !!c.is_blocked;
+    if(filterVal==='birthday') matchFilter = bdThisMonth.some(function(b){ return b.id===c.id; });
+    return matchSearch && matchFilter;
+  });
+  if(filterVal==='top-orders') filtered.sort(function(a,b){ return b.order_count-a.order_count; });
+
+  // Table
+  var tb = document.getElementById('cd-table');
+  if(!filtered.length){ tb.innerHTML='<tr><td colspan="9" style="text-align:center;padding:2rem;opacity:.4">No customers found</td></tr>'; return; }
+  tb.innerHTML = filtered.slice(0,50).map(function(c){
+    var age = c.dob ? Math.floor((Date.now()-new Date(c.dob))/(365.25*86400000)) : '—';
+    var location = [c.city,c.state,c.country].filter(Boolean).join(', ')||'—';
+    return '<tr>'
+      +'<td style="color:var(--cr);font-weight:600">'+c.name+(c.is_blocked?'<span class="badge badge-red" style="margin-left:.4rem">Blocked</span>':'')+'</td>'
+      +'<td style="font-size:.78rem">'+c.mobile+'</td>'
+      +'<td style="font-size:.75rem">'+(c.dob?new Date(c.dob).toLocaleDateString('en-IN'):'')+' / '+age+'</td>'
+      +'<td style="font-size:.75rem">'+(c.gender||'—')+'</td>'
+      +'<td style="font-size:.75rem;max-width:150px">'+location+'</td>'
+      +'<td style="color:var(--g2);font-weight:700">'+c.order_count+'</td>'
+      +'<td style="color:var(--g2)">₹'+c.total_spent+'</td>'
+      +'<td><span class="badge '+(c.is_blocked?'badge-red':'badge-green')+'">'+(c.is_blocked?'Blocked':'Active')+'</span></td>'
+      +'<td><button class="btn '+(c.is_blocked?'btn-gold':'btn-red')+' btn-xs" onclick="toggleBlockCustomer(\''+c.id+'\')">'+(c.is_blocked?'Unblock':'Block')+'</button></td>'
+    +'</tr>';
+  }).join('');
+}
+
+function toggleBlockCustomer(id){
+  var customers = get(KEY.customers)||[];
+  var c = customers.find(function(x){ return x.id===id; });
+  if(!c) return;
+  c.is_blocked = !c.is_blocked;
+  set(KEY.customers, customers);
+  logActivity(c.is_blocked?'Customer Block':'Customer Unblock', c.name, 'customer');
+  renderCustomersDash();
+  toast((c.is_blocked?'Blocked: ':'Unblocked: ')+c.name, c.is_blocked?'err':'ok');
+}
+
+// ============================
+// ACTIVITY DASHBOARD
+// ============================
+function renderActivityDash(){
+  var log = get(KEY.activity)||[];
+  var admins = get(KEY.admins)||[];
+
+  document.getElementById('ac-total-admins').textContent = admins.length;
+  document.getElementById('ac-total-actions').textContent = log.length;
+  var todayStart = new Date(); todayStart.setHours(0,0,0,0);
+  document.getElementById('ac-today-actions').textContent = log.filter(function(l){ return new Date(l.timestamp)>=todayStart; }).length;
+
+  // Populate admin filter
+  var adminFilter = document.getElementById('ac-filter-admin');
+  var currentVal = adminFilter.value;
+  adminFilter.innerHTML = '<option value="all">All Admins</option>';
+  var adminNames = [...new Set(log.map(function(l){ return l.admin_name; }))];
+  adminNames.forEach(function(name){
+    var opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    if(name===currentVal) opt.selected=true;
+    adminFilter.appendChild(opt);
+  });
+
+  // Charts
+  var actionsByAdmin = {};
+  log.forEach(function(l){ actionsByAdmin[l.admin_name]=(actionsByAdmin[l.admin_name]||0)+1; });
+  var adminKeys = Object.keys(actionsByAdmin);
+  makeBarChart('chartAdminActions', adminKeys, adminKeys.map(function(k){ return actionsByAdmin[k]; }), 'Actions', [CHART_COLORS.gold,CHART_COLORS.green,CHART_COLORS.blue,CHART_COLORS.red,CHART_COLORS.purple].slice(0,adminKeys.length));
+
+  var actionTypes = {};
+  log.forEach(function(l){ actionTypes[l.type]=(actionTypes[l.type]||0)+1; });
+  var typeKeys = Object.keys(actionTypes);
+  makeDoughnutChart('chartActionTypes', typeKeys, typeKeys.map(function(k){ return actionTypes[k]; }));
+
+  // Filter log
+  var adminF = document.getElementById('ac-filter-admin').value;
+  var typeF = document.getElementById('ac-filter-type').value;
+  var filtered = log.filter(function(l){
+    return (adminF==='all'||l.admin_name===adminF) && (typeF==='all'||l.type===typeF);
+  });
+
+  // Icons per type
+  var typeIcons = { login:'🔑', product:'🫙', order:'📦', blog:'📝', coupon:'🏷️', customer:'👤', general:'⚙️' };
+  var typeClasses = { login:'login', product:'add', order:'edit', blog:'edit', coupon:'add', customer:'edit', general:'edit' };
+
+  var el = document.getElementById('ac-log-list');
+  if(!filtered.length){ el.innerHTML='<div class="empty"><div class="empty-ico">📋</div><p>No activity recorded</p></div>'; return; }
+  el.innerHTML = filtered.slice(0,50).map(function(l){
+    var tc = typeClasses[l.type]||'edit';
+    return '<div class="activity-item">'
+      +'<div class="activity-ico '+tc+'">'+(typeIcons[l.type]||'⚙️')+'</div>'
+      +'<div class="activity-info">'
+        +'<div class="activity-admin">'+l.admin_name+' <span style="font-size:.7rem;opacity:.5">('+l.admin_role+')</span></div>'
+        +'<div class="activity-action">'+l.action+(l.details?' — <span style="color:var(--g)">'+l.details+'</span>':'')+'</div>'
+        +'<div class="activity-time">'+new Date(l.timestamp).toLocaleString('en-IN')+'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function clearActivityLog(){
+  if(!confirm('Clear all activity log? This cannot be undone.')) return;
+  set(KEY.activity,[]);
+  renderActivityDash();
+  toast('Activity log cleared');
+}
+
+// ============================
+// NAVIGATION
+// ============================
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  // Render specific dashboard pages
+  if(id==='pg-orders-dash') renderOrdersDash();
+  else if(id==='pg-customers-dash') renderCustomersDash();
+  else if(id==='pg-activity-dash') renderActivityDash();
+  else renderAll();
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+
+function toast(msg, type){
+  var el=document.getElementById('toastEl');
+  el.textContent=msg; el.className='toast '+(type||'ok')+' show';
+  setTimeout(function(){ el.classList.remove('show'); },3000);
+}
+
+// ============================
+// RENDER ALL
+// ============================
+function renderAll(){
+  renderDashboard();
+  renderProducts();
+  renderOrders();
+  renderTeam();
+  renderBlogs();
+  renderCoupons();
+  renderInquiries();
+  renderAffiliates();
+  renderAdmins();
+  loadSettings();
+}
+
+// ============================
+// DASHBOARD
+// ============================
+function renderDashboard(){
+  var prods=get(KEY.products)||[];
+  var orders=get(KEY.orders)||[];
+  var team=get(KEY.team)||[];
+  var admins=get(KEY.admins)||[];
+  document.getElementById('s-products').textContent=prods.length;
+  document.getElementById('s-orders').textContent=orders.length;
+  document.getElementById('s-team').textContent=team.length;
+  document.getElementById('s-admins').textContent=admins.length;
+  var el=document.getElementById('home-orders');
+  if(!orders.length){ el.innerHTML='<div class="empty"><div class="empty-ico">📦</div><p>No orders yet</p></div>'; return; }
+  el.innerHTML='<table><thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody>'
+    +orders.slice().reverse().slice(0,5).map(function(o){
+      return '<tr><td style="color:var(--g2)">'+o.order_number+'</td><td>'+o.customer_name+'</td><td style="color:var(--g2);font-weight:700">₹'+o.total+'</td><td><span class="badge badge-gold">'+o.status+'</span></td><td style="font-size:.75rem">'+new Date(o.created_at).toLocaleDateString('en-IN')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+// ============================
+// PRODUCTS
+// ============================
+var editingProdId=null;
+function renderProducts(){
+  var prods=get(KEY.products)||[];
+  var grid=document.getElementById('prodGrid');
+  if(!prods.length){ grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🫙</div><p>No products. Add one!</p></div>'; return; }
+  grid.innerHTML=prods.map(function(p){
+    var stockBadge=p.inventory>10?'<span class="badge badge-green">Stock: '+p.inventory+'</span>':p.inventory>0?'<span class="badge badge-gold">Low: '+p.inventory+'</span>':'<span class="badge badge-red">Out of Stock</span>';
+    var imgHtml=p.imgUrl?'<img src="'+p.imgUrl+'" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'🫙\'">':'🫙';
+    return '<div class="prod-card"><div class="prod-img">'+imgHtml+'</div><div class="prod-info"><div class="prod-name">'+p.name+'</div><div class="prod-cat">'+p.cat+(p.price?' · ₹'+p.price:'')+'</div>'+stockBadge+'<div class="prod-actions"><button class="btn btn-outline btn-sm" onclick="editProd('+p.id+')">✏️</button><button class="btn btn-red btn-sm" onclick="delProd('+p.id+')">🗑️</button></div></div></div>';
+  }).join('');
+}
+
+function openAddProduct(){ editingProdId=null; document.getElementById('prodModalTitle').textContent='Add Product'; ['pm-name','pm-price','pm-img','pm-desc','pm-sizes'].forEach(function(i){document.getElementById(i).value='';}); document.getElementById('pm-stock').value=100; document.getElementById('pm-status').value='Active'; openModal('prodModal'); }
+
+function editProd(id){
+  var p=(get(KEY.products)||[]).find(function(x){return x.id===id;}); if(!p)return;
+  editingProdId=id; document.getElementById('prodModalTitle').textContent='Edit Product';
+  document.getElementById('pm-name').value=p.name; document.getElementById('pm-cat').value=p.cat; document.getElementById('pm-price').value=p.price||''; document.getElementById('pm-stock').value=p.inventory||0; document.getElementById('pm-status').value=p.status; document.getElementById('pm-sizes').value=p.sizes||''; document.getElementById('pm-img').value=p.imgUrl||''; document.getElementById('pm-desc').value=p.desc||'';
+  openModal('prodModal');
+}
+
+function saveProduct(){
+  var name=document.getElementById('pm-name').value.trim(); if(!name){toast('Product name required!','err');return;}
+  var prods=get(KEY.products)||[];
+  var data={id:editingProdId||(Date.now()),name:name,cat:document.getElementById('pm-cat').value,price:parseFloat(document.getElementById('pm-price').value)||0,inventory:parseInt(document.getElementById('pm-stock').value)||0,status:document.getElementById('pm-status').value,sizes:document.getElementById('pm-sizes').value,imgUrl:document.getElementById('pm-img').value.trim(),desc:document.getElementById('pm-desc').value.trim(),slug:name.toLowerCase().replace(/[^a-z0-9]+/g,'-')};
+  if(editingProdId){var i=prods.findIndex(function(x){return x.id===editingProdId;}); if(i>-1)prods[i]=data;}else prods.push(data);
+  set(KEY.products,prods); closeModal('prodModal'); renderProducts();
+  logActivity(editingProdId?'Product Edit':'Product Add',name,'product');
+  toast('Product saved!','ok');
+}
+
+function delProd(id){
+  if(!confirm('Delete this product?'))return;
+  var p=(get(KEY.products)||[]).find(function(x){return x.id===id;});
+  set(KEY.products,(get(KEY.products)||[]).filter(function(p){return p.id!==id;}));
+  renderProducts(); logActivity('Product Delete',p?p.name:'', 'product'); toast('Deleted');
+}
+
+// ============================
+// ORDERS
+// ============================
+function renderOrders(){
+  var orders=get(KEY.orders)||[];
+  var tb=document.getElementById('ordersBody');
+  if(!orders.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;opacity:.4">No orders yet</td></tr>';return;}
+  tb.innerHTML=orders.slice().reverse().map(function(o){
+    return '<tr><td style="color:var(--g2);font-size:.75rem">'+o.order_number+'</td><td>'+o.customer_name+'</td><td>'+o.customer_mobile+'</td><td style="color:var(--g2);font-weight:700">₹'+o.total+'</td><td><span class="badge badge-gold">'+o.status+'</span></td><td style="font-size:.75rem">'+new Date(o.created_at).toLocaleDateString('en-IN')+'</td>'
+      +'<td><select style="background:var(--dk3);border:1px solid rgba(200,146,42,.2);color:var(--cr);padding:.3rem;border-radius:4px;font-size:.72rem" onchange="updateOrderStatus(\''+o.id+'\',this.value)">'+['pending','processing','shipped','delivered','cancelled'].map(function(s){return '<option value="'+s+'" '+(o.status===s?'selected':'')+'>'+s+'</option>';}).join('')+'</select></td></tr>';
+  }).join('');
+}
+
+function updateOrderStatus(id,status){
+  var orders=get(KEY.orders)||[]; var o=orders.find(function(x){return x.id===id;});
+  if(o){o.status=status;set(KEY.orders,orders);logActivity('Order Status Update','#'+o.order_number+' → '+status,'order');toast('Status updated','ok');}
+}
+
+// ============================
+// TEAM
+// ============================
+var editingTeamId=null;
+function renderTeam(){
+  var team=get(KEY.team)||[];
+  var tb=document.getElementById('teamBody');
+  if(!team.length){tb.innerHTML='<tr><td colspan="3" style="text-align:center;padding:2rem;opacity:.4">No team members</td></tr>';return;}
+  tb.innerHTML=team.map(function(m){
+    return '<tr><td><span style="font-size:1.3rem">'+m.emoji+'</span> <strong style="color:var(--cr)">'+m.name+'</strong>'+(m.hindi?' <span style="font-size:.75rem;color:var(--g)">'+m.hindi+'</span>':'')+'</td><td>'+m.role+'</td><td><button class="btn btn-outline btn-sm" onclick="editTeam(\''+m.id+'\')">✏️</button> <button class="btn btn-red btn-sm" onclick="delTeam(\''+m.id+'\')">🗑️</button></td></tr>';
+  }).join('');
+}
+
+function openAddTeam(){editingTeamId=null;['tm-name','tm-role','tm-hindi','tm-bio'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('tm-emoji').value='👤';openModal('teamModal');}
+
+function editTeam(id){
+  var m=(get(KEY.team)||[]).find(function(x){return x.id===id;}); if(!m)return; editingTeamId=id;
+  document.getElementById('tm-name').value=m.name; document.getElementById('tm-role').value=m.role; document.getElementById('tm-hindi').value=m.hindi||''; document.getElementById('tm-emoji').value=m.emoji||'👤'; document.getElementById('tm-bio').value=m.bio||'';
+  openModal('teamModal');
+}
+
+function saveTeam(){
+  var name=document.getElementById('tm-name').value.trim(); if(!name){toast('Name required!','err');return;}
+  var team=get(KEY.team)||[];
+  var data={id:editingTeamId||('t'+Date.now()),name:name,role:document.getElementById('tm-role').value.trim(),hindi:document.getElementById('tm-hindi').value.trim(),emoji:document.getElementById('tm-emoji').value||'👤',bio:document.getElementById('tm-bio').value.trim()};
+  if(editingTeamId){var i=team.findIndex(function(x){return x.id===editingTeamId;});if(i>-1)team[i]=data;}else team.push(data);
+  set(KEY.team,team);closeModal('teamModal');renderTeam();toast('Team member saved!','ok');
+}
+
+function delTeam(id){
+  if(!confirm('Remove this member?'))return;
+  set(KEY.team,(get(KEY.team)||[]).filter(function(m){return m.id!==id;}));
+  renderTeam();toast('Removed');
+}
+
+// ============================
+// BLOGS
+// ============================
+var editingBlogId=null;
+function renderBlogs(){
+  var blogs=get(KEY.blogs)||[];
+  var tb=document.getElementById('blogsBody');
+  if(!blogs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:2rem;opacity:.4">No blogs yet</td></tr>';return;}
+  tb.innerHTML=blogs.slice().reverse().map(function(b){
+    return '<tr><td style="color:var(--cr);font-weight:600">'+b.title+'</td><td><span class="badge '+(b.status==='published'?'badge-green':'badge-gold')+'">'+b.status+'</span></td><td style="font-size:.75rem">'+new Date(b.created_at).toLocaleDateString('en-IN')+'</td><td><button class="btn btn-outline btn-sm" onclick="editBlog(\''+b.id+'\')">✏️</button> <button class="btn btn-red btn-sm" onclick="delBlog(\''+b.id+'\')">🗑️</button></td></tr>';
+  }).join('');
+}
+
+function openAddBlog(){editingBlogId=null;['bl-title','bl-img','bl-excerpt','bl-content'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('bl-status').value='draft';document.getElementById('blogModalTitle').textContent='New Blog';openModal('blogModal');}
+
+function editBlog(id){
+  var b=(get(KEY.blogs)||[]).find(function(x){return x.id===id;}); if(!b)return; editingBlogId=id;
+  document.getElementById('blogModalTitle').textContent='Edit Blog'; document.getElementById('bl-title').value=b.title; document.getElementById('bl-img').value=b.image||''; document.getElementById('bl-excerpt').value=b.excerpt||''; document.getElementById('bl-content').value=b.content||''; document.getElementById('bl-status').value=b.status;
+  openModal('blogModal');
+}
+
+function saveBlog(){
+  var title=document.getElementById('bl-title').value.trim(); if(!title){toast('Title required!','err');return;}
+  var blogs=get(KEY.blogs)||[];
+  var status=document.getElementById('bl-status').value;
+  var data={id:editingBlogId||('b'+Date.now()),title:title,slug:title.toLowerCase().replace(/[^a-z0-9]+/g,'-'),image:document.getElementById('bl-img').value.trim(),excerpt:document.getElementById('bl-excerpt').value.trim(),content:document.getElementById('bl-content').value.trim(),status:status,created_at:new Date().toISOString(),published_at:status==='published'?new Date().toISOString():null};
+  if(editingBlogId){var i=blogs.findIndex(function(x){return x.id===editingBlogId;});if(i>-1)blogs[i]=data;}else blogs.push(data);
+  set(KEY.blogs,blogs);closeModal('blogModal');renderBlogs();
+  logActivity(status==='published'?'Blog Publish':'Blog Save',title,'blog');
+  toast('Blog saved!','ok');
+}
+
+function delBlog(id){
+  if(!confirm('Delete this blog?'))return;
+  var b=(get(KEY.blogs)||[]).find(function(x){return x.id===id;});
+  set(KEY.blogs,(get(KEY.blogs)||[]).filter(function(b){return b.id!==id;}));
+  renderBlogs();logActivity('Blog Delete',b?b.title:'','blog');toast('Deleted');
+}
+
+// ============================
+// COUPONS
+// ============================
+function renderCoupons(){
+  var coupons=get(KEY.coupons)||[];
+  var tb=document.getElementById('couponsBody');
+  if(!coupons.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;opacity:.4">No coupons yet</td></tr>';return;}
+  tb.innerHTML=coupons.map(function(c){
+    var expired=c.expiry&&new Date(c.expiry)<new Date();
+    return '<tr><td style="color:var(--g2);font-weight:700;font-family:monospace">'+c.code+'</td><td>'+c.type+'</td><td>'+(c.type==='percentage'?c.value+'%':'₹'+c.value)+'</td><td>'+(c.expiry||'—')+'</td><td><span class="badge '+(expired?'badge-red':'badge-green')+'">'+(expired?'Expired':'Active')+'</span></td><td><button class="btn btn-red btn-sm" onclick="delCoupon(\''+c.id+'\')">🗑️</button></td></tr>';
+  }).join('');
+}
+
+function openAddCoupon(){['cp-code','cp-val','cp-min','cp-max','cp-exp'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('cp-type').value='percentage';openModal('couponModal');}
+
+function saveCoupon(){
+  var code=document.getElementById('cp-code').value.trim().toUpperCase();
+  var val=parseFloat(document.getElementById('cp-val').value);
+  if(!code||!val){toast('Code and value required!','err');return;}
+  var coupons=get(KEY.coupons)||[];
+  if(coupons.find(function(c){return c.code===code;})){toast('Code already exists!','err');return;}
+  coupons.push({id:'c'+Date.now(),code:code,type:document.getElementById('cp-type').value,value:val,min_order:parseFloat(document.getElementById('cp-min').value)||0,max_uses:parseInt(document.getElementById('cp-max').value)||null,expiry:document.getElementById('cp-exp').value||null,used_count:0,is_active:true,created_at:new Date().toISOString()});
+  set(KEY.coupons,coupons);closeModal('couponModal');renderCoupons();
+  logActivity('Coupon Create',code,'coupon');
+  toast('Coupon created!','ok');
+}
+
+function delCoupon(id){
+  if(!confirm('Delete coupon?'))return;
+  var c=(get(KEY.coupons)||[]).find(function(x){return x.id===id;});
+  set(KEY.coupons,(get(KEY.coupons)||[]).filter(function(c){return c.id!==id;}));
+  renderCoupons();logActivity('Coupon Delete',c?c.code:'','coupon');toast('Deleted');
+}
+
+// ============================
+// INQUIRIES
+// ============================
+function renderInquiries(){
+  var inq=get(KEY.inquiries)||[];
+  var tb=document.getElementById('inqBody');
+  tb.innerHTML=inq.length?inq.slice().reverse().map(function(i){ return '<tr><td>'+i.name+'</td><td>'+i.mobile+'</td><td style="max-width:250px">'+i.message+'</td><td style="font-size:.75rem">'+new Date(i.created_at).toLocaleDateString('en-IN')+'</td></tr>'; }).join(''):'<tr><td colspan="4" style="text-align:center;padding:2rem;opacity:.4">No inquiries yet</td></tr>';
+  var dealers=get(KEY.dealers)||[];
+  var db=document.getElementById('dealerBody');
+  db.innerHTML=dealers.length?dealers.slice().reverse().map(function(d){ return '<tr><td>'+d.name+'</td><td>'+d.age+'</td><td>'+d.mobile+'</td><td>'+d.shop_address+'</td><td style="font-size:.75rem">'+new Date(d.created_at).toLocaleDateString('en-IN')+'</td></tr>'; }).join(''):'<tr><td colspan="5" style="text-align:center;padding:2rem;opacity:.4">No dealer inquiries yet</td></tr>';
+}
+
+// ============================
+// AFFILIATES
+// ============================
+function renderAffiliates(){
+  var affs=get(KEY.affiliates)||[];
+  var tb=document.getElementById('affBody');
+  tb.innerHTML=affs.length?affs.map(function(a){ return '<tr><td style="color:var(--cr)">'+a.name+'</td><td>'+a.social_platform+'</td><td style="font-size:.75rem"><a href="'+a.social_url+'" target="_blank" style="color:var(--g2)">View</a></td><td><span class="badge '+(a.status==='approved'?'badge-green':a.status==='rejected'?'badge-red':'badge-gold')+'">'+a.status+'</span></td><td><button class="btn btn-outline btn-sm" onclick="updateAff(\''+a.id+'\',\'approved\')">✅</button> <button class="btn btn-red btn-sm" onclick="updateAff(\''+a.id+'\',\'rejected\')">❌</button></td></tr>'; }).join(''):'<tr><td colspan="5" style="text-align:center;padding:2rem;opacity:.4">No requests yet</td></tr>';
+}
+
+function updateAff(id,status){
+  var affs=get(KEY.affiliates)||[]; var a=affs.find(function(x){return x.id===id;});
+  if(a){a.status=status;set(KEY.affiliates,affs);renderAffiliates();logActivity('Affiliate '+status,a.name,'general');toast('Updated','ok');}
+}
+
+// ============================
+// ADMINS
+// ============================
+function renderAdmins(){
+  var admins=get(KEY.admins)||[];
+  var tb=document.getElementById('adminsBody');
+  var isSA=currentAdmin&&currentAdmin.role==='Super Admin';
+  document.getElementById('addAdminBtn').style.display=isSA?'':'none';
+  tb.innerHTML=admins.map(function(a){
+    var isMe=currentAdmin&&a.id===currentAdmin.id;
+    var perms=a.permissions?Object.keys(a.permissions).filter(function(k){return a.permissions[k];}).join(', '):'All';
+    return '<tr><td style="color:var(--cr)">'+(isMe?'⭐ ':'')+a.name+'</td><td>'+a.username+'</td><td><span class="badge badge-gold">'+a.role+'</span></td><td style="font-size:.7rem;color:rgba(200,146,42,.5);max-width:200px">'+perms+'</td><td>'+(isMe?'<span style="font-size:.72rem;opacity:.4">You</span>':(isSA?'<button class="btn btn-red btn-sm" onclick="delAdmin(\''+a.id+'\')">🗑️</button>':'—'))+'</td></tr>';
+  }).join('');
+}
+
+function openAddAdmin(){
+  ['na-name','na-user','na-pass'].forEach(function(i){document.getElementById(i).value='';});
+  document.getElementById('na-role').value='Admin';
+  ['p-products','p-orders','p-blogs','p-coupons','p-inquiries','p-affiliates','p-settings','p-team'].forEach(function(id){ document.getElementById(id).checked=['p-products','p-orders'].indexOf(id)>-1; });
+  openModal('adminModal');
+}
+
+function saveAdmin(){
+  var name=document.getElementById('na-name').value.trim(); var user=document.getElementById('na-user').value.trim(); var pass=document.getElementById('na-pass').value.trim();
+  if(!name||!user||!pass){toast('All fields required!','err');return;}
+  if(pass.length<6){toast('Password min 6 chars!','err');return;}
+  var admins=get(KEY.admins)||[];
+  if(admins.find(function(a){return a.username===user;})){toast('Username exists!','err');return;}
+  var perms={}; ['products','orders','blogs','coupons','inquiries','affiliates','settings','team'].forEach(function(p){ perms[p]=document.getElementById('p-'+p).checked; });
+  admins.push({id:'a'+Date.now(),name:name,username:user,password:pass,role:document.getElementById('na-role').value,permissions:perms,created_at:new Date().toISOString()});
+  set(KEY.admins,admins);closeModal('adminModal');renderAdmins();
+  logActivity('Admin Add',name,'general');
+  toast('Admin added!','ok');
+}
+
+function delAdmin(id){
+  if(currentAdmin&&currentAdmin.role!=='Super Admin'){toast('Super Admin only!','err');return;}
+  if(!confirm('Delete this admin?'))return;
+  var a=(get(KEY.admins)||[]).find(function(x){return x.id===id;});
+  set(KEY.admins,(get(KEY.admins)||[]).filter(function(a){return a.id!==id;}));
+  renderAdmins();logActivity('Admin Delete',a?a.name:'','general');toast('Removed');
+}
+
+// ============================
+// SETTINGS
+// ============================
+function loadSettings(){
+  var s=get(KEY.settings)||{};
+  document.getElementById('set-name').value=s.site_name||''; document.getElementById('set-mobile').value=s.mobile||''; document.getElementById('set-email').value=s.email||''; document.getElementById('set-wa').value=s.whatsapp||''; document.getElementById('set-rzp').value=s.razorpay_key||''; document.getElementById('set-ai').value=s.ai_key||''; document.getElementById('set-addr').value=s.address||'';
+}
+
+function saveSettings(){
+  var s={site_name:document.getElementById('set-name').value,mobile:document.getElementById('set-mobile').value,email:document.getElementById('set-email').value,whatsapp:document.getElementById('set-wa').value,razorpay_key:document.getElementById('set-rzp').value,ai_key:document.getElementById('set-ai').value,address:document.getElementById('set-addr').value};
+  set(KEY.settings,s);
+  if(s.ai_key) localStorage.setItem('thar_chat_settings',JSON.stringify({apiKey:s.ai_key}));
+  logActivity('Settings Update','Website settings saved','general');
+  toast('Settings saved!','ok');
+}
+
+// ============================
+// KEYBOARD
+// ============================
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none') doLogin();
+  if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(function(m){m.classList.remove('open');});
+});
+document.getElementById('lPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>

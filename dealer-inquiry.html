@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dealer Inquiry - Thar Oil Products</title>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;opacity:.1;}
+.orb1{width:400px;height:400px;background:var(--gold);top:-100px;right:-100px;}
+.orb2{width:300px;height:300px;background:#7A4A0A;bottom:10%;left:-80px;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(9,7,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,146,42,.1);}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.box{background:var(--dark2);border:1px solid rgba(200,146,42,.18);border-radius:14px;padding:2.5rem;width:100%;max-width:560px;position:relative;z-index:1;box-shadow:0 20px 60px rgba(0,0,0,.4);margin-top:5rem;}
+.box-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.2rem;}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--cream);text-align:center;margin-bottom:.3rem;}
+.sub{text-align:center;font-size:.82rem;margin-bottom:2rem;line-height:1.6;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.fg{display:flex;flex-direction:column;gap:.4rem;}
+.fg label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600;}
+.fg input,.fg textarea,.fg select{background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.8rem 1rem;border-radius:7px;font-size:.88rem;font-family:inherit;transition:border .3s;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--gold);}
+.fg select option{background:var(--dark2);}
+.fg textarea{resize:vertical;min-height:90px;}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1rem;font-size:.88rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;font-family:inherit;margin-top:1rem;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,146,42,.4);}
+.msg{padding:.75rem 1rem;border-radius:6px;font-size:.82rem;margin-top:.75rem;display:none;}
+.msg.ok{background:rgba(39,174,96,.1);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+.msg.err{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr;}nav{padding:1rem 1.5rem;}}
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🫙</div>
+    <div class="logo-text">Thar Oil</div>
+  </a>
+  <a href="index.html" style="color:var(--text);text-decoration:none;font-size:.82rem">← Back to Home</a>
+</nav>
+<div class="box">
+  <div class="box-icon">🏪</div>
+  <h2>Dealer Inquiry</h2>
+  <p class="sub">Interested in becoming a Thar Oil dealer? Fill in your details and our team will contact you within 24 hours.</p>
+  <div class="form-grid">
+    <div class="fg"><label>Full Name *</label><input id="d-name" type="text" placeholder="Your name"></div>
+    <div class="fg"><label>Age *</label><input id="d-age" type="number" placeholder="Your age" min="18" max="80"></div>
+    <div class="fg"><label>Mobile Number *</label><input id="d-mobile" type="tel" placeholder="10-digit mobile"></div>
+    <div class="fg"><label>WhatsApp Number *</label><input id="d-whatsapp" type="tel" placeholder="WhatsApp number"></div>
+    <div class="fg"><label>Email</label><input id="d-email" type="email" placeholder="Email address"></div>
+    <div class="fg"><label>City *</label><input id="d-city" type="text" placeholder="Your city"></div>
+  </div>
+  <div class="fg" style="margin-bottom:1rem"><label>Shop/Business Location *</label><input id="d-shop" type="text" placeholder="Full shop address"></div>
+  <div class="form-grid">
+    <div class="fg"><label>State *</label><input id="d-state" type="text" placeholder="State"></div>
+    <div class="fg"><label>Pincode</label><input id="d-pincode" type="text" placeholder="6-digit pincode" maxlength="6"></div>
+  </div>
+  <div class="fg" style="margin-bottom:0"><label>Message / Additional Info</label><textarea id="d-msg" placeholder="Tell us about your business, experience, monthly requirements..."></textarea></div>
+  <button class="submit-btn" onclick="submitInquiry()">Submit Dealer Inquiry</button>
+  <div class="msg" id="d-msg-result"></div>
+</div>
+<script>
+async function submitInquiry(){
+  var name = document.getElementById('d-name').value.trim();
+  var age = document.getElementById('d-age').value.trim();
+  var mobile = document.getElementById('d-mobile').value.trim();
+  var whatsapp = document.getElementById('d-whatsapp').value.trim();
+  var shop = document.getElementById('d-shop').value.trim();
+  var city = document.getElementById('d-city').value.trim();
+  var state = document.getElementById('d-state').value.trim();
+  var msgEl = document.getElementById('d-msg-result');
+
+  if(!name||!age||!mobile||!shop||!city||!state){
+    msgEl.textContent='❌ Please fill all required fields (*)'; msgEl.className='msg err'; msgEl.style.display='block';
+    setTimeout(function(){msgEl.style.display='none';},4000); return;
+  }
+  if(!/^\d{10}$/.test(mobile)){ msgEl.textContent='❌ Enter valid 10-digit mobile'; msgEl.className='msg err'; msgEl.style.display='block'; return; }
+  var btn = document.querySelector('.submit-btn');
+  btn.textContent='Submitting...'; btn.disabled=true;
+  var data = {
+    name, age: parseInt(age), mobile, whatsapp: whatsapp||mobile,
+    email: document.getElementById('d-email').value.trim(),
+    shop_address: shop, city, state,
+    pincode: document.getElementById('d-pincode').value.trim(),
+    message: document.getElementById('d-msg').value.trim()
+  };
+  try {
+    await fetch('/api/dealer-inquiry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  } catch(e){
+    // Save locally
+    var di = JSON.parse(localStorage.getItem('thar_dealer_inquiries')||'[]');
+    di.push({...data, status:'pending', created_at:new Date().toISOString()});
+    localStorage.setItem('thar_dealer_inquiries', JSON.stringify(di));
+  }
+  msgEl.textContent='✅ Inquiry submitted successfully! Our team will contact you within 24 hours on WhatsApp.';
+  msgEl.className='msg ok'; msgEl.style.display='block';
+  btn.textContent='Submit Dealer Inquiry'; btn.disabled=false;
+  document.querySelectorAll('input,textarea').forEach(function(el){el.value='';});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Cart - Thar Oil Products</title>
+<meta name="description" content="Your shopping cart - Thar Oil Products">
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--gold3:#F5D98A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(9,7,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,146,42,.1);}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-text span{display:block;font-family:'Outfit',sans-serif;font-size:.5rem;font-weight:600;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-right a{color:var(--text);text-decoration:none;font-size:.8rem;transition:all .3s;padding:.4rem .8rem;border-radius:4px;}
+.nav-right a:hover{color:var(--gold2);}
+.nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark)!important;padding:.5rem 1.2rem;border-radius:50px;font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.container{max-width:1200px;margin:0 auto;padding:7rem 2rem 3rem;}
+h1{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2.5rem;margin-bottom:.5rem;}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;}
+.continue-link{color:var(--text);text-decoration:none;font-size:.85rem;transition:color .3s;}
+.continue-link:hover{color:var(--gold2);}
+.cart-grid{display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start;}
+.cart-items-box{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;overflow:hidden;}
+.cart-items-header{padding:1.2rem 1.5rem;border-bottom:1px solid rgba(200,146,42,.08);display:flex;justify-content:space-between;align-items:center;}
+.cart-items-header h3{color:var(--cream);font-size:1rem;font-weight:600;}
+.clear-cart-btn{background:transparent;border:none;color:var(--red);font-size:.78rem;cursor:pointer;opacity:.7;transition:opacity .3s;}
+.clear-cart-btn:hover{opacity:1;}
+.cart-item{display:grid;grid-template-columns:90px 1fr auto;gap:1.2rem;padding:1.3rem 1.5rem;border-bottom:1px solid rgba(200,146,42,.06);align-items:center;transition:background .3s;}
+.cart-item:last-child{border-bottom:none;}
+.cart-item:hover{background:rgba(200,146,42,.02);}
+.item-img{width:90px;height:90px;object-fit:contain;border-radius:8px;background:var(--dark3);padding:.3rem;}
+.item-info h4{color:var(--cream);font-size:.95rem;font-weight:600;margin-bottom:.3rem;}
+.item-cat{font-size:.72rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+.item-price{color:var(--gold2);font-weight:700;font-size:1rem;}
+.item-original{color:rgba(200,146,42,.4);text-decoration:line-through;font-size:.8rem;margin-left:.4rem;}
+.item-stock-badge{display:inline-block;font-size:.65rem;padding:.18rem .5rem;border-radius:3px;margin-top:.3rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+.in-stock{background:rgba(39,174,96,.12);color:var(--green);}
+.out-stock{background:rgba(192,57,43,.12);color:var(--red);}
+.item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:.6rem;}
+.qty-wrap{display:flex;align-items:center;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.12);border-radius:8px;overflow:hidden;}
+.qty-btn{width:36px;height:36px;background:transparent;border:none;color:var(--gold2);font-size:1.2rem;cursor:pointer;transition:background .3s;}
+.qty-btn:hover{background:rgba(200,146,42,.15);}
+.qty-val{min-width:40px;text-align:center;font-weight:600;color:var(--cream);font-size:.9rem;}
+.remove-btn{background:transparent;border:none;color:rgba(200,146,42,.35);font-size:.72rem;cursor:pointer;transition:color .3s;}
+.remove-btn:hover{color:var(--red);}
+.item-total{color:var(--cream);font-weight:700;font-size:.95rem;}
+/* Summary */
+.cart-summary{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;padding:2rem;position:sticky;top:5rem;}
+.summary-title{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:1.4rem;margin-bottom:1.5rem;}
+.coupon-box{background:rgba(200,146,42,.04);border:1px solid rgba(200,146,42,.1);border-radius:8px;padding:1rem;margin-bottom:1.5rem;}
+.coupon-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+.coupon-row{display:flex;gap:.5rem;}
+.coupon-input{flex:1;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.65rem 1rem;border-radius:6px;font-size:.85rem;font-family:inherit;}
+.coupon-input:focus{outline:none;border-color:var(--gold);}
+.coupon-apply-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:.65rem 1rem;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;}
+.coupon-msg{font-size:.75rem;margin-top:.5rem;}
+.coupon-msg.ok{color:var(--green);}
+.coupon-msg.err{color:var(--red);}
+.summary-line{display:flex;justify-content:space-between;margin-bottom:.75rem;font-size:.9rem;}
+.summary-line.total{border-top:1px solid rgba(200,146,42,.15);padding-top:1rem;margin-top:.5rem;font-size:1.15rem;font-weight:700;}
+.summary-line.total span:last-child{color:var(--gold2);}
+.summary-line.discount{color:var(--green);}
+.checkout-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:1.1rem;font-size:.88rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .3s;margin-top:1.5rem;}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,146,42,.4);}
+.secure-note{text-align:center;font-size:.72rem;margin-top:1rem;color:rgba(200,146,42,.4);}
+.free-ship{text-align:center;font-size:.75rem;color:var(--green);margin-top:.5rem;}
+/* Empty */
+.empty{text-align:center;padding:5rem 2rem;}
+.empty-icon{font-size:5rem;margin-bottom:1.5rem;opacity:.6;}
+.empty h2{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2rem;margin-bottom:.75rem;}
+.empty p{margin-bottom:2rem;font-size:.95rem;}
+.empty-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);padding:1rem 2.5rem;text-decoration:none;font-weight:700;border-radius:8px;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;}
+@media(max-width:900px){.cart-grid{grid-template-columns:1fr;}nav{padding:1rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🫙</div>
+    <div class="logo-text">Thar Oil<span>Products</span></div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="account.html">👤 Account</a>
+    <a href="index.html#products" class="nav-cta">Shop More</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>🛒 Shopping Cart</h1>
+      <p id="cart-count-text" style="font-size:.85rem;margin-top:.25rem;">Loading...</p>
+    </div>
+    <a href="index.html" class="continue-link">← Continue Shopping</a>
+  </div>
+  <div id="mainContent"></div>
+</div>
+<script>
+var STORAGE_KEY = 'thar_cart';
+var cart = [];
+var appliedCoupon = null;
+
+function loadCart(){
+  try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e){ cart = []; }
+}
+function saveCart(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+  updateCartBadge();
+}
+function updateCartBadge(){
+  var count = cart.reduce(function(s,i){ return s+(i.qty||1); },0);
+  document.getElementById('cart-count-text').textContent = count + ' item' + (count!==1?'s':'') + ' in your cart';
+}
+
+function render(){
+  loadCart();
+  var main = document.getElementById('mainContent');
+  if(!cart.length){
+    main.innerHTML = '<div class="empty"><div class="empty-icon">🛒</div><h2>Your cart is empty</h2><p>Add some products to get started!</p><a href="index.html#products" class="empty-btn">Browse Products</a></div>';
+    document.getElementById('cart-count-text').textContent = '0 items in your cart';
+    return;
+  }
+
+  var subtotal = cart.reduce(function(s,i){ return s + (i.price||0)*(i.qty||1); },0);
+  var discount = 0;
+  if(appliedCoupon){
+    discount = appliedCoupon.type==='percentage' ? subtotal*appliedCoupon.value/100 : appliedCoupon.value;
+    discount = Math.min(discount, subtotal);
+  }
+  var shipping = subtotal-discount >= 500 ? 0 : 49;
+  var total = subtotal - discount + shipping;
+
+  var itemsHtml = cart.map(function(item, idx){
+    var isOut = item.inventory === 0 || item.stock === 0;
+    var img = (item.images && item.images[0]) ? item.images[0] : (item.imgUrl || 'img/logo.png');
+    return '<div class="cart-item">'
+      +'<img src="'+img+'" alt="'+item.name+'" class="item-img" onerror="this.src=\'img/logo.png\'">'
+      +'<div class="item-info">'
+        +'<h4>'+item.name+'</h4>'
+        +(item.cat ? '<div class="item-cat">'+item.cat+'</div>' : '')
+        +'<div><span class="item-price">₹'+((item.price||0)).toFixed(0)+'</span></div>'
+        +'<span class="item-stock-badge '+(isOut?'out-stock':'in-stock')+'">'+(isOut?'Out of Stock':'In Stock')+'</span>'
+      +'</div>'
+      +'<div class="item-actions">'
+        +'<div class="qty-wrap">'
+          +'<button class="qty-btn" onclick="changeQty('+idx+',-1)">−</button>'
+          +'<span class="qty-val">'+(item.qty||1)+'</span>'
+          +'<button class="qty-btn" onclick="changeQty('+idx+',1)">+</button>'
+        +'</div>'
+        +'<div class="item-total">₹'+((item.price||0)*(item.qty||1)).toFixed(0)+'</div>'
+        +'<button class="remove-btn" onclick="removeItem('+idx+')">🗑 Remove</button>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+
+  main.innerHTML = '<div class="cart-grid">'
+    +'<div class="cart-items-box">'
+      +'<div class="cart-items-header"><h3>Cart Items ('+cart.length+')</h3><button class="clear-cart-btn" onclick="clearCart()">Clear All</button></div>'
+      +itemsHtml
+    +'</div>'
+    +'<div class="cart-summary">'
+      +'<h3 class="summary-title">Order Summary</h3>'
+      +'<div class="coupon-box">'
+        +'<div class="coupon-label">🏷 Coupon Code</div>'
+        +'<div class="coupon-row">'
+          +'<input class="coupon-input" type="text" id="couponInput" placeholder="Enter code" value="'+(appliedCoupon ? appliedCoupon.code : '')+'">'
+          +'<button class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>'
+        +'</div>'
+        +'<div id="couponMsg" class="coupon-msg '+(appliedCoupon?'ok':'')+'">'+( appliedCoupon?'✅ Coupon applied! '+( appliedCoupon.type==='percentage'? appliedCoupon.value+'% off':'₹'+appliedCoupon.value+' off'):'' )+'</div>'
+      +'</div>'
+      +'<div class="summary-line"><span>Subtotal</span><span>₹'+subtotal.toFixed(0)+'</span></div>'
+      +(discount>0?'<div class="summary-line discount"><span>Discount</span><span>-₹'+discount.toFixed(0)+'</span></div>':'')
+      +'<div class="summary-line"><span>Shipping</span><span>'+(shipping===0?'<span style="color:var(--green)">FREE</span>':'₹'+shipping)+'</span></div>'
+      +'<div class="summary-line total"><span>Total</span><span>₹'+total.toFixed(0)+'</span></div>'
+      +'<button class="checkout-btn" onclick="goCheckout()">Proceed to Checkout →</button>'
+      +'<p class="secure-note">🔒 Secure checkout</p>'
+      +(subtotal < 500 ? '<p class="free-ship">Add ₹'+(500-subtotal).toFixed(0)+' more for FREE shipping!</p>' : '<p class="free-ship">✅ You qualify for FREE shipping!</p>')
+    +'</div>'
+  +'</div>';
+  updateCartBadge();
+}
+
+function changeQty(idx, delta){
+  loadCart();
+  if(!cart[idx]) return;
+  cart[idx].qty = Math.max(1, (cart[idx].qty||1) + delta);
+  saveCart();
+  render();
+}
+function removeItem(idx){
+  loadCart();
+  cart.splice(idx,1);
+  saveCart();
+  render();
+}
+function clearCart(){
+  if(!confirm('Clear all items from cart?')) return;
+  cart = [];
+  saveCart();
+  render();
+}
+async function applyCoupon(){
+  var code = document.getElementById('couponInput').value.trim().toUpperCase();
+  var msg = document.getElementById('couponMsg');
+  if(!code){ msg.textContent='Enter a coupon code'; msg.className='coupon-msg err'; return; }
+  var subtotal = cart.reduce(function(s,i){ return s+(i.price||0)*(i.qty||1); },0);
+  try {
+    var res = await fetch('/api/coupons/validate', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({code:code, order_total:subtotal})
+    });
+    var data = await res.json();
+    if(data.valid){
+      appliedCoupon = data.discount;
+      appliedCoupon.code = code;
+      msg.textContent = '✅ Coupon applied! '+(data.discount.type==='percentage'?data.discount.value+'% off':'₹'+data.discount.value+' off');
+      msg.className = 'coupon-msg ok';
+      render();
+    } else {
+      msg.textContent = '❌ '+(data.error||'Invalid coupon');
+      msg.className='coupon-msg err';
+      appliedCoupon = null;
+    }
+  } catch(e){
+    // ✅ FIX: localStorage coupon fallback hataya gaya
+    // Pehle koi bhi DevTools se fake coupon bana sakta tha:
+    // localStorage.setItem('thar_coupons', JSON.stringify([{code:'HACK',value:100,type:'percentage',is_active:true}]))
+    // Ab sirf server validate karega
+    msg.textContent='❌ Server se connect nahi ho paya. Dobara try karein.';
+    msg.className='coupon-msg err';
+  }
+}
+function goCheckout(){
+  if(!cart.length){ alert('Cart is empty!'); return; }
+  if(appliedCoupon) localStorage.setItem('thar_coupon', JSON.stringify(appliedCoupon));
+  window.location.href='checkout.html';
+}
+
+loadCart();
+render();
+</script>
+</body>
+</html>

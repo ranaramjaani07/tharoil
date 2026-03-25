@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account - Thar Oil Products</title>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8921A;--gold2:#E4B84A;--dark:#090705;--dark2:#120E06;--dark3:#1A1209;--cream:#F0E4C8;--text:#B8A882;--red:#C0392B;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(9,7,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,146,42,.1);}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-text span{display:block;font-family:'Outfit',sans-serif;font-size:.5rem;font-weight:600;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-right a{color:var(--text);text-decoration:none;font-size:.8rem;transition:color .3s;padding:.4rem .8rem;}
+.nav-right a:hover{color:var(--gold2);}
+.container{max-width:1100px;margin:0 auto;padding:7rem 2rem 3rem;}
+/* Dashboard layout */
+.dash-grid{display:grid;grid-template-columns:260px 1fr;gap:2rem;align-items:start;}
+.sidebar{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;overflow:hidden;position:sticky;top:5rem;}
+.user-card{padding:1.5rem;border-bottom:1px solid rgba(200,146,42,.08);text-align:center;}
+.user-avatar{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto .8rem;}
+.user-name{color:var(--cream);font-weight:600;font-size:1rem;}
+.user-mobile{font-size:.78rem;color:var(--gold);margin-top:.2rem;}
+.sb-menu{padding:.75rem 0;}
+.sb-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.85rem 1.2rem;background:transparent;border:none;color:var(--text);font-size:.82rem;font-family:inherit;cursor:pointer;transition:all .3s;text-align:left;}
+.sb-btn:hover{background:rgba(200,146,42,.06);color:var(--cream);}
+.sb-btn.active{background:rgba(200,146,42,.1);color:var(--gold2);border-left:2px solid var(--gold2);}
+.sb-btn-ico{font-size:1rem;width:20px;text-align:center;}
+.logout-btn{width:100%;padding:.85rem 1.2rem;background:transparent;border:none;border-top:1px solid rgba(200,146,42,.08);color:var(--red);font-size:.82rem;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:.75rem;transition:all .3s;}
+.logout-btn:hover{background:rgba(192,57,43,.06);}
+/* Content panels */
+.panel{display:none;}
+.panel.active{display:block;}
+.panel-box{background:var(--dark2);border:1px solid rgba(200,146,42,.12);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+.panel-title{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:1.5rem;margin-bottom:1.2rem;}
+.panel-sub{font-size:.82rem;margin-bottom:1.5rem;}
+/* Orders */
+.order-card{background:var(--dark3);border:1px solid rgba(200,146,42,.08);border-radius:8px;padding:1.2rem;margin-bottom:1rem;}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;}
+.order-num{color:var(--gold2);font-weight:700;font-size:.9rem;}
+.order-status{font-size:.7rem;padding:.2rem .6rem;border-radius:20px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
+.status-pending{background:rgba(228,184,74,.12);color:var(--gold2);}
+.status-delivered{background:rgba(39,174,96,.12);color:var(--green);}
+.status-cancelled{background:rgba(192,57,43,.12);color:var(--red);}
+.status-processing{background:rgba(200,146,42,.12);color:var(--gold);}
+.order-items-list{font-size:.8rem;margin-bottom:.6rem;}
+.order-footer{display:flex;justify-content:space-between;font-size:.82rem;}
+.order-total{color:var(--gold2);font-weight:700;}
+/* Profile form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fg{margin-bottom:0;}
+.fg label{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem;font-weight:600;}
+.fg input,.fg select{width:100%;background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.15);color:var(--cream);padding:.75rem 1rem;border-radius:6px;font-size:.85rem;font-family:inherit;}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--gold);}
+.fg select option{background:var(--dark2);}
+.save-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;padding:.9rem 2rem;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:7px;cursor:pointer;transition:all .3s;margin-top:1rem;}
+.save-btn:hover{box-shadow:0 8px 24px rgba(200,146,42,.3);}
+/* Affiliate */
+.aff-box{background:linear-gradient(135deg,rgba(200,146,42,.08),rgba(200,146,42,.04));border:1px solid rgba(200,146,42,.2);border-radius:10px;padding:1.5rem;margin-bottom:1.2rem;}
+.aff-title{color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:.5rem;}
+.aff-desc{font-size:.82rem;line-height:1.6;}
+.aff-form{margin-top:1rem;}
+.msg-box{padding:.75rem 1rem;border-radius:6px;font-size:.8rem;margin-top:.75rem;display:none;}
+.msg-box.ok{background:rgba(39,174,96,.1);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+.msg-box.err{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+/* Not logged in */
+.not-logged{text-align:center;padding:4rem 2rem;}
+.not-logged h2{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:2rem;margin-bottom:.75rem;}
+.nl-btn{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);padding:.9rem 2rem;text-decoration:none;font-weight:700;border-radius:8px;margin:.3rem;}
+@media(max-width:800px){.dash-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}nav{padding:1rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🫙</div>
+    <div class="logo-text">Thar Oil<span>Products</span></div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="cart.html">🛒 Cart</a>
+  </div>
+</nav>
+
+<div class="container" id="mainContent">Loading...</div>
+
+<script>
+var user = null;
+try{ user = JSON.parse(localStorage.getItem('thar_user')||'null'); }catch(e){}
+
+if(!user){
+  document.getElementById('mainContent').innerHTML =
+    '<div class="not-logged">'
+    +'<div style="font-size:4rem;margin-bottom:1rem">👤</div>'
+    +'<h2>Please Login First</h2>'
+    +'<p style="margin-bottom:2rem">Login to access your account, orders, and more.</p>'
+    +'<a href="login.html" class="nl-btn">Login</a>'
+    +'<a href="login.html" class="nl-btn" style="background:transparent;border:1px solid var(--gold);color:var(--gold2);">Create Account</a>'
+    +'</div>';
+} else {
+  renderDashboard();
+}
+
+function renderDashboard(){
+  document.getElementById('mainContent').innerHTML =
+    '<div class="dash-grid">'
+    +'<div class="sidebar">'
+      +'<div class="user-card">'
+        +'<div class="user-avatar">'+user.name.charAt(0).toUpperCase()+'</div>'
+        +'<div class="user-name">'+user.name+'</div>'
+        +'<div class="user-mobile">'+( user.mobile||user.email||'' )+'</div>'
+      +'</div>'
+      +'<div class="sb-menu">'
+        +'<button class="sb-btn active" onclick="showPanel(\'orders\',this)"><span class="sb-btn-ico">📦</span>My Orders</button>'
+        +'<button class="sb-btn" onclick="showPanel(\'tracking\',this)"><span class="sb-btn-ico">🚚</span>Order Tracking</button>'
+        +'<button class="sb-btn" onclick="showPanel(\'profile\',this)"><span class="sb-btn-ico">✏️</span>Edit Profile</button>'
+        +'<button class="sb-btn" onclick="showPanel(\'affiliate\',this)"><span class="sb-btn-ico">🤝</span>Affiliate Program</button>'
+      +'</div>'
+      +'<button class="logout-btn" onclick="doLogout()"><span class="sb-btn-ico">🚪</span>Logout</button>'
+    +'</div>'
+    +'<div id="panelArea">'
+      +ordersPanel()
+      +trackingPanel()
+      +profilePanel()
+      +affiliatePanel()
+    +'</div>'
+  +'</div>';
+
+  loadOrders();
+}
+
+function showPanel(name, btn){
+  document.querySelectorAll('.sb-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  var el = document.getElementById('panel-'+name);
+  if(el) el.classList.add('active');
+  if(name==='orders') loadOrders();
+}
+
+function ordersPanel(){
+  return '<div class="panel active" id="panel-orders">'
+    +'<div class="panel-box"><h2 class="panel-title">📦 My Orders</h2>'
+    +'<div id="orders-list"><div style="text-align:center;padding:2rem;opacity:.5">Loading orders...</div></div>'
+    +'</div></div>';
+}
+function trackingPanel(){
+  return '<div class="panel" id="panel-tracking">'
+    +'<div class="panel-box"><h2 class="panel-title">🚚 Order Tracking</h2>'
+    +'<div style="margin-bottom:1rem">'
+    +'<div class="fg" style="max-width:400px"><label>Enter Order Number</label><input id="track-input" type="text" placeholder="e.g. THAR-1234567890"></div>'
+    +'<button class="save-btn" style="margin-top:.75rem" onclick="trackOrder()">Track Order</button>'
+    +'</div>'
+    +'<div id="track-result"></div>'
+    +'</div></div>';
+}
+function profilePanel(){
+  return '<div class="panel" id="panel-profile">'
+    +'<div class="panel-box"><h2 class="panel-title">✏️ Edit Profile</h2>'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Full Name</label><input id="p-name" type="text" value="'+(user.name||'')+'"></div>'
+    +'<div class="fg"><label>Mobile</label><input id="p-mobile" type="tel" value="'+(user.mobile||'')+'"></div>'
+    +'<div class="fg"><label>Email</label><input id="p-email" type="email" value="'+(user.email||'')+'"></div>'
+    +'<div class="fg"><label>Date of Birth</label><input id="p-dob" type="date" value="'+(user.dob||'')+'"></div>'
+    +'<div class="fg"><label>Gender</label><select id="p-gender"><option value="">Select</option><option value="male" '+(user.gender==='male'?'selected':'')+'>Male</option><option value="female" '+(user.gender==='female'?'selected':'')+'>Female</option><option value="other" '+(user.gender==='other'?'selected':'')+'>Other</option></select></div>'
+    +'<div class="fg"><label>City</label><input id="p-city" type="text" value="'+(user.city||'')+'"></div>'
+    +'<div class="fg"><label>State</label><input id="p-state" type="text" value="'+(user.state||'')+'"></div>'
+    +'</div>'
+    +'<div class="fg" style="margin-top:1rem"><label>Full Address</label><input id="p-address" type="text" value="'+(user.address||'')+'"></div>'
+    +'<button class="save-btn" onclick="saveProfile()">Save Changes</button>'
+    +'<div class="msg-box" id="profile-msg"></div>'
+    +'</div></div>';
+}
+function affiliatePanel(){
+  return '<div class="panel" id="panel-affiliate">'
+    +'<div class="panel-box"><h2 class="panel-title">🤝 Affiliate Program</h2>'
+    +'<div class="aff-box">'
+    +'<div class="aff-title">💰 Earn by Promoting Thar Oil</div>'
+    +'<div class="aff-desc">Join our affiliate program and earn commission on every sale you refer. Share your unique link on social media and earn money!</div>'
+    +'</div>'
+    +'<div class="aff-form">'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Your Name</label><input id="aff-name" type="text" value="'+(user.name||'')+'"></div>'
+    +'<div class="fg"><label>Instagram Profile</label><input id="aff-instagram" type="url" placeholder="https://instagram.com/yourhandle"></div>'
+    +'<div class="fg"><label>YouTube Channel</label><input id="aff-youtube" type="url" placeholder="https://youtube.com/..."></div>'
+    +'<div class="fg"><label>WhatsApp Number</label><input id="aff-whatsapp" type="tel" placeholder="10-digit number" value="'+(user.mobile||'')+'"></div>'
+    +'</div>'
+    +'<button class="save-btn" onclick="applyAffiliate()">Apply for Affiliate</button>'
+    +'<div class="msg-box" id="aff-msg"></div>'
+    +'</div>'
+    +'</div></div>';
+}
+
+async function loadOrders(){
+  var el = document.getElementById('orders-list');
+  if(!el) return;
+  var orders = [];
+  try {
+    var token = localStorage.getItem('thar_user_token');
+    if(token){
+      var res = await fetch('/api/user/orders',{headers:{Authorization:'Bearer '+token}});
+      orders = await res.json();
+    }
+  } catch(e){}
+  // Also check local orders
+  var localOrders = JSON.parse(localStorage.getItem('thar_orders')||'[]');
+  orders = orders.concat(localOrders);
+  orders.sort(function(a,b){ return new Date(b.created_at)-new Date(a.created_at); });
+
+  if(!orders.length){
+    el.innerHTML='<div style="text-align:center;padding:3rem;opacity:.5"><div style="font-size:3rem;margin-bottom:1rem">📦</div><p>No orders yet. <a href="index.html#products" style="color:var(--gold2)">Start shopping!</a></p></div>';
+    return;
+  }
+  el.innerHTML = orders.map(function(o){
+    var statusClass = 'status-'+(o.order_status||'pending').replace(' ','-');
+    var items = o.items ? o.items.map(function(i){ return i.product_name||i.name; }).join(', ') : 'Items';
+    return '<div class="order-card">'
+      +'<div class="order-header">'
+      +'<span class="order-num">'+o.order_number+'</span>'
+      +'<span class="order-status '+statusClass+'">'+(o.order_status||'Pending')+'</span>'
+      +'</div>'
+      +'<div class="order-items-list">'+items+'</div>'
+      +'<div class="order-footer">'
+      +'<span>'+new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'</span>'
+      +'<span class="order-total">₹'+(o.total||0)+'</span>'
+      +'</div>'
+      +(o.tracking_number?'<div style="font-size:.75rem;margin-top:.5rem;color:var(--gold)">📍 Tracking: '+o.tracking_number+'</div>':'')
+    +'</div>';
+  }).join('');
+}
+
+function trackOrder(){
+  var num = document.getElementById('track-input').value.trim();
+  if(!num){ return; }
+  var res = document.getElementById('track-result');
+  var localOrders = JSON.parse(localStorage.getItem('thar_orders')||'[]');
+  var order = localOrders.find(function(o){ return o.order_number===num; });
+  if(order){
+    res.innerHTML='<div class="order-card"><div class="order-header"><span class="order-num">'+order.order_number+'</span><span class="order-status status-'+(order.order_status||'pending')+'">'+(order.order_status||'Pending')+'</span></div><div style="font-size:.82rem;margin-top:.5rem">Placed: '+new Date(order.created_at).toLocaleDateString('en-IN')+'</div>'+(order.tracking_number?'<div style="font-size:.8rem;margin-top:.5rem;color:var(--gold)">📍 Tracking No: '+order.tracking_number+'</div>':'')+'</div>';
+  } else {
+    res.innerHTML='<div style="color:var(--red);font-size:.85rem;margin-top:.75rem">Order not found. Please contact support on WhatsApp.</div>';
+  }
+}
+
+async function saveProfile(){
+  var updates = {
+    name: document.getElementById('p-name').value.trim(),
+    mobile: document.getElementById('p-mobile').value.trim(),
+    email: document.getElementById('p-email').value.trim(),
+    dob: document.getElementById('p-dob').value,
+    gender: document.getElementById('p-gender').value,
+    city: document.getElementById('p-city').value.trim(),
+    state: document.getElementById('p-state').value.trim(),
+    address: document.getElementById('p-address').value.trim()
+  };
+  var msg = document.getElementById('profile-msg');
+  try {
+    var token = localStorage.getItem('thar_user_token');
+    var res = await fetch('/api/user/profile',{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(updates)});
+    var data = await res.json();
+    if(data.success){ msg.textContent='✅ Profile updated!'; msg.className='msg-box ok'; }
+    else { throw new Error(); }
+  } catch(e){
+    // Local update
+    Object.assign(user, updates);
+    localStorage.setItem('thar_user', JSON.stringify(user));
+    msg.textContent='✅ Profile updated!'; msg.className='msg-box ok';
+  }
+  msg.style.display='block';
+  setTimeout(function(){ msg.style.display='none'; },3000);
+}
+
+async function applyAffiliate(){
+  var data = {
+    name: document.getElementById('aff-name').value.trim(),
+    social_url: document.getElementById('aff-instagram').value.trim()||document.getElementById('aff-youtube').value.trim(),
+    social_platform: document.getElementById('aff-instagram').value ? 'instagram' : 'youtube',
+    whatsapp: document.getElementById('aff-whatsapp').value.trim()
+  };
+  var msg = document.getElementById('aff-msg');
+  if(!data.name||!data.social_url){ msg.textContent='❌ Please fill name and social media link'; msg.className='msg-box err'; msg.style.display='block'; return; }
+  try {
+    await fetch('/api/affiliate/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  } catch(e){}
+  msg.textContent='✅ Application submitted! We will review and contact you within 48 hours.'; msg.className='msg-box ok'; msg.style.display='block';
+}
+
+function doLogout(){
+  localStorage.removeItem('thar_user');
+  localStorage.removeItem('thar_user_token');
+  window.location.href='login.html';
+}
+</script>
+</body>
+</html>

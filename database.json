@@ -1,0 +1,167 @@
+{
+  "users": [
+    {
+      "id": "e1181113-d849-45de-8a3c-52731c5330e1",
+      "name": "Test User",
+      "email": "test@example.com",
+      "mobile": "9999999999",
+      "whatsapp": null,
+      "address": "Test Address",
+      "city": null,
+      "state": null,
+      "pincode": null,
+      "dob": null,
+      "gender": null,
+      "password": "$2a$10$k7RQvbMwKceyjjoxUaXpjOYsF6Jk/MYWTfdfVZ4ZnEhgPYURPOSVe",
+      "email_verified": 0,
+      "mobile_verified": 0,
+      "is_blocked": 0,
+      "created_at": "2026-03-16T05:19:01.637Z"
+    },
+    {
+      "id": "1af9dc7a-4710-434d-adb9-bece2a231264",
+      "name": "Rana ram Jaani",
+      "email": "ranaramjaani006@gmail.com",
+      "mobile": "07877176397",
+      "whatsapp": "98312894712",
+      "address": "M266+988, Bhooka Bhagatsingh, Rajasthan 344022",
+      "city": "Balotra",
+      "state": "Rajasthan",
+      "pincode": "34402",
+      "dob": "2008-11-11",
+      "gender": "male",
+      "password": "$2a$10$Kg7EHZ50QfkioxW.YXq2juVHiR/IQIcFSilnA7m5fO1DpwzNxsNNi",
+      "email_verified": 0,
+      "mobile_verified": 0,
+      "is_blocked": 0,
+      "created_at": "2026-03-16T05:25:30.049Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "09650fc6-5b0d-455a-9bd9-a3eb7d8159c9",
+      "name": "Super Admin",
+      "username": "admin",
+      "password": "$2a$10$JtA4CJHd78d6tb3RnAoqJO1TwHjmOTsRe7iZB05GwK5jHjsgmQBmy",
+      "role": "super_admin",
+      "permissions": {
+        "products": true,
+        "orders": true,
+        "customers": true,
+        "blogs": true,
+        "coupons": true,
+        "inquiries": true,
+        "testimonials": true,
+        "affiliates": true,
+        "settings": true,
+        "seo": true,
+        "admins": true
+      },
+      "created_by": null,
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.804Z"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Cold Pressed Oils",
+      "slug": "cold-pressed-oils",
+      "description": "Pure cold-pressed oils extracted at room temperature",
+      "id": "342dacfd-878a-47fb-a0eb-d8e3a90f9272",
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.807Z",
+      "product_count": 0
+    },
+    {
+      "name": "Mustard Oil",
+      "slug": "mustard-oil",
+      "description": "Traditional mustard oil for cooking",
+      "id": "4b36dbda-3e23-47c2-b272-c9a920030eb6",
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.807Z",
+      "product_count": 0
+    },
+    {
+      "name": "Sesame Oil",
+      "slug": "sesame-oil",
+      "description": "Premium sesame oil",
+      "id": "421b2fd0-d5d4-430d-a5f5-79ec58685d79",
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.807Z",
+      "product_count": 0
+    },
+    {
+      "name": "Groundnut Oil",
+      "slug": "groundnut-oil",
+      "description": "Pure groundnut oil",
+      "id": "9632067b-ba36-44a2-85c5-867cbd2de94a",
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.807Z",
+      "product_count": 0
+    },
+    {
+      "name": "Coconut Oil",
+      "slug": "coconut-oil",
+      "description": "Virgin coconut oil",
+      "id": "0256d12e-78cc-49ff-8d95-fcbccf216639",
+      "is_active": true,
+      "created_at": "2026-03-16T03:19:28.807Z",
+      "product_count": 0
+    }
+  ],
+  "products": [],
+  "orders": [],
+  "order_items": [],
+  "coupons": [],
+  "reviews": [],
+  "blogs": [],
+  "testimonials": [],
+  "inquiries": [],
+  "dealer_inquiries": [],
+  "affiliates": [
+    {
+      "id": "4e7b0d71-02a4-4911-a539-12c754644b41",
+      "user_id": null,
+      "name": "ranaram",
+      "social_platform": "instagram",
+      "social_url": "F:\\thar oil\\web site\\website 3.0\\server.js",
+      "status": "pending",
+      "created_at": "2026-03-16T06:26:47.064Z"
+    },
+    {
+      "id": "601a9bff-4ef0-4052-b627-b987cdd1b672",
+      "user_id": null,
+      "name": "ranaram",
+      "social_platform": "instagram",
+      "social_url": "F:\\thar oil\\web site\\website 3.0\\server.js",
+      "status": "pending",
+      "created_at": "2026-03-16T06:27:11.244Z"
+    }
+  ],
+  "settings": {
+    "site_name": "Thar Oil",
+    "site_logo": "/img/logo.png",
+    "contact_email": "info@tharoil.com",
+    "contact_mobile": "+91 9876543210",
+    "address": "Thar Oil, Rajasthan, India",
+    "gst_number": "GSTIN123456789",
+    "food_license": "FL123456789",
+    "razorpay_key_id": "",
+    "razorpay_key_secret": "",
+    "shiprocket_email": "",
+    "shiprocket_password": "",
+    "facebook_url": "",
+    "instagram_url": "https://www.instagram.com/thar_kachhi_ghani/",
+    "twitter_url": "",
+    "youtube_url": ""
+  },
+  "seo_settings": {
+    "meta_title": "Thar Oil - 100% Natural Cold-Pressed Oils",
+    "meta_description": "Premium quality cold-pressed oils from Thar Oil. Pure, natural and authentic.",
+    "meta_keywords": "",
+    "google_analytics_id": "",
+    "facebook_pixel_id": "",
+    "google_search_console_verification": "",
+    "custom_scripts": ""
+  }
+}
